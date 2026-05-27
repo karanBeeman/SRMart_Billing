@@ -1,65 +1,27 @@
-import {
+import { Routes, Route, Navigate } from "react-router-dom";
 
-    Routes,
-    Route,
-    Navigate
+import LoginPage from "./auth/pages/LoginPage";
 
-} from "react-router-dom";
+import SalesPage from "./dashboard/pages/SalesPage";
 
-import LoginPage
-    from "./auth/pages/LoginPage";
+import DashboardPage from "./dashboard/pages/DashboardPage";
 
-import SalesPage
-    from "./dashboard/pages/SalesPage";
+import CustomerPage from "./dashboard/pages/CustomerPage";
 
-import DashboardPage
-    from "./dashboard/pages/DashboardPage";
+import ProtectedRoute from "./auth/components/ProtectedRoute";
 
-import CustomerPage
-    from "./dashboard/pages/CustomerPage";
-
-import UnauthorizedPage
-    from "./dashboard/pages/UnauthorizedPage";
-
-import ProtectedRoute
-    from "./auth/components/ProtectedRoute";
-
-
-function App(){
-
-    return(
-
+function App() {
+    return (
         <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
 
-            <Route
-                path="/"
-                element={
-                    <Navigate
-                        to="/login"
-                        replace
-                    />
-                }
-            />
-
-            <Route
-                path="/login"
-                element={
-                    <LoginPage/>
-                }
-            />
-
-            <Route
-                path="/unauthorized"
-                element={
-                    <UnauthorizedPage/>
-                }
-            />
+            <Route path="/login" element={<LoginPage />} />
 
             <Route
                 path="/sales"
                 element={
                     <ProtectedRoute>
-                        <SalesPage/>
+                        <SalesPage />
                     </ProtectedRoute>
                 }
             />
@@ -67,10 +29,8 @@ function App(){
             <Route
                 path="/dashboard"
                 element={
-                    <ProtectedRoute
-                        roles={["ADMIN"]}
-                    >
-                        <DashboardPage/>
+                    <ProtectedRoute roles={["ADMIN"]}>
+                        <DashboardPage />
                     </ProtectedRoute>
                 }
             />
@@ -78,21 +38,13 @@ function App(){
             <Route
                 path="/customers"
                 element={
-                    <ProtectedRoute
-                        roles={[
-                            "ADMIN",
-                            "BILLER"
-                        ]}
-                    >
-                        <CustomerPage/>
+                    <ProtectedRoute roles={["ADMIN", "BILLER"]}>
+                        <CustomerPage />
                     </ProtectedRoute>
                 }
             />
-
         </Routes>
-
     );
-
 }
 
 export default App;

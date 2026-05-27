@@ -91,7 +91,6 @@ function TopNavbar() {
         z-50
     "
                 >
-
                     {/* Profile circle */}
 
                     <div
@@ -114,11 +113,8 @@ function TopNavbar() {
             cursor-pointer
         "
                     >
-
                         {firstLetter}
-
                     </div>
-
 
                     {/* Hover card */}
 
@@ -156,11 +152,8 @@ function TopNavbar() {
             z-[9999]
         "
                     >
-
                         {user?.username}
-
                     </div>
-
                 </div>
             </div>
         </div>

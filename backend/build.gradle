@@ -3,10 +3,13 @@ plugins {
     id 'org.springframework.boot' version '3.5.14'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'com.github.node-gradle.node' version '7.1.0'
+//    id 'com.github.spotbugs' version '6.4.8'
 }
 
 group = 'com.sr.mart'
 version = '0.0.1-SNAPSHOT'
+
+//apply from: "$rootDir/gradle/spotbugs-plugin.gradle"
 
 java {
     toolchain {
@@ -68,13 +71,19 @@ tasks.register('installFrontend', YarnTask) {
 tasks.register('buildFrontend', com.github.gradle.node.npm.task.NpmTask) {
     args = ['run', 'build']
     workingDir = frontendDir
-    dependsOn installFrontend
+    dependsOn installFrontend, formatFrontend
 }
 
 tasks.register('copyFrontend', Copy) {
     from '../frontend/dist'
     into 'src/main/resources/static'
     dependsOn buildFrontend
+}
+
+tasks.register('formatFrontend', YarnTask) {
+    args = ['format:check']
+    workingDir = frontendDir
+    dependsOn installFrontend
 }
 
 processResources.dependsOn 'copyFrontend'

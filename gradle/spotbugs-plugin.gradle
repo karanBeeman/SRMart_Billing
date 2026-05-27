@@ -1,0 +1,25 @@
+apply plugin: 'com.github.spotbugs'
+
+spotbugs {
+    def classLoader = plugins['com.github.spotbugs'].class.classLoader
+    def SpotBugsEffort = classLoader.findLoadedClass('com.github.spotbugs.snom.Effort')
+
+    toolVersion = '4.8.6'
+    ignoreFailures = false
+    showProgress = false
+    effort = SpotBugsEffort.MAX
+}
+
+spotbugsMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+spotbugsTest {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
