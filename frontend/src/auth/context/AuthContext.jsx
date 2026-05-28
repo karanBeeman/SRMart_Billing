@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
         const loggedUser = {
             username: response.username,
 
-            roles: response.roles,
+            role: response.role,
         };
 
         sessionStorage.setItem(

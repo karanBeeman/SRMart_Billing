@@ -3,6 +3,7 @@ package com.sr.mart.software.service;
 import com.sr.mart.software.dto.CreateUserRequest;
 import com.sr.mart.software.entity.Role;
 import com.sr.mart.software.entity.User;
+import com.sr.mart.software.enums.UserRoles;
 import com.sr.mart.software.repository.RoleRepository;
 import com.sr.mart.software.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class UserService {
             );
         }
 
-        Role role = roleRepository.findByRoleName(request.getRoleName())
+        Role role = roleRepository.findByRoleName(UserRoles.valueOf(request.getRoleName()))
             .orElseThrow(() ->
                 new RuntimeException("Role not found"));
 

@@ -10,6 +10,6 @@ import lombok.Data;
 public class LoginResponse {
 
     private String username;
-    private List<UserRoles> roles;
+    private UserRoles role;
 
 }

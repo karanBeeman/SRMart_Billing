@@ -1,10 +1,13 @@
 package com.sr.mart.software.service;
 
+import com.sr.mart.software.entity.User;
 import com.sr.mart.software.enums.UserRoles;
 import com.sr.mart.software.model.LoginRequest;
 import com.sr.mart.software.model.LoginResponse;
+import com.sr.mart.software.repository.UserRepository;
 import com.sr.mart.software.responseMapper.LoginMapper;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,17 +18,14 @@ import org.springframework.stereotype.Service;
 public class LoginService {
 
     private LoginMapper loginMapper;
+    private final UserRepository userRepository;
 
     public LoginResponse login(LoginRequest loginRequest) {
-        List<UserRoles> response = listOfRoles(loginRequest);
-        return loginMapper.mapLoginRequestToLoginResponse(loginRequest.getUsername(), response);
+        User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() ->
+            new RuntimeException(
+                "Invalid username"
+            ));
+        return loginMapper.mapLoginRequestToLoginResponse(user);
     }
 
-    private List<UserRoles> listOfRoles(LoginRequest loginRequest) {
-        if(loginRequest.getUsername().equalsIgnoreCase("preetha")) {
-            return List.of(UserRoles.BILLER);
-        } else {
-            return List.of(UserRoles.ADMIN, UserRoles.BILLER);
-        }
-    }
 }
