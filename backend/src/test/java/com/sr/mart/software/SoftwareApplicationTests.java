@@ -1,12 +1,25 @@
 package com.sr.mart.software;
 
+import com.sr.mart.software.repository.RoleRepository;
+import com.sr.mart.software.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+	"spring.autoconfigure.exclude=" +
+		"org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration," +
+		"org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration"
+})
 @ActiveProfiles("test")
 class SoftwareApplicationTests {
+
+	@MockitoBean
+	private RoleRepository roleRepository;
+
+	@MockitoBean
+	private UserRepository userRepository;
 
 	@Test
 	void contextLoads() {

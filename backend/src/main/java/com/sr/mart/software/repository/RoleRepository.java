@@ -4,9 +4,10 @@ import com.sr.mart.software.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
-public interface RoleRepository
-    extends JpaRepository<Role, Long> {
+@Repository
+public interface RoleRepository extends JpaRepository<Role, Long> {
 
     Optional<Role> findByRoleName(String roleName);
 }
