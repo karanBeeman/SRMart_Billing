@@ -9,6 +9,8 @@ plugins {
 group = 'com.sr.mart'
 version = '0.0.1-SNAPSHOT'
 
+apply plugin: 'checkstyle'
+apply from: "$rootDir/gradle/checkstyle-plugin.gradle"
 apply from: "$rootDir/gradle/spotbugs-plugin.gradle"
 
 java {
