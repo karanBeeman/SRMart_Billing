@@ -4,6 +4,8 @@ import com.sr.mart.software.dto.CreateUserRequest;
 import com.sr.mart.software.entity.Role;
 import com.sr.mart.software.entity.User;
 import com.sr.mart.software.enums.UserRoles;
+import com.sr.mart.software.exception.RoleNotFoundException;
+import com.sr.mart.software.exception.UserAlreadyExistsException;
 import com.sr.mart.software.repository.RoleRepository;
 import com.sr.mart.software.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -24,14 +26,11 @@ public class UserService {
                 .isPresent();
 
         if (userExists) {
-            throw new RuntimeException(
-                "Username already exists"
-            );
+            throw new UserAlreadyExistsException("Username already exists");
         }
 
         Role role = roleRepository.findByRoleName(UserRoles.valueOf(request.getRoleName()))
-            .orElseThrow(() ->
-                new RuntimeException("Role not found"));
+            .orElseThrow(() -> new RoleNotFoundException("Role not found"));
 
         User user = User.builder()
             .username(request.getUsername())
