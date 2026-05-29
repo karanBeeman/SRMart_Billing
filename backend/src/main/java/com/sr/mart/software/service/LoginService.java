@@ -1,6 +1,8 @@
 package com.sr.mart.software.service;
 
 import com.sr.mart.software.entity.User;
+import com.sr.mart.software.exception.InvalidPasswordException;
+import com.sr.mart.software.exception.InvalidUsernameException;
 import com.sr.mart.software.model.LoginRequest;
 import com.sr.mart.software.model.LoginResponse;
 import com.sr.mart.software.repository.UserRepository;
@@ -21,12 +23,12 @@ public class LoginService {
 
     public LoginResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() ->
-            new RuntimeException(
+            new InvalidUsernameException(
                 "Invalid username"
             ));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Incorrect Password");
+            throw new InvalidPasswordException("Incorrect password");
         }
 
         return loginMapper.mapLoginRequestToLoginResponse(user);

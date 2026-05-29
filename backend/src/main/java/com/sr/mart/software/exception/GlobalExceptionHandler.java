@@ -49,6 +49,32 @@ public class GlobalExceptionHandler {
             );
     }
 
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ErrorResponse> invalidPasswordExceptionHandler(InvalidPasswordException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        ErrorResponse.builder()
+                                .message(ex.getMessage())
+                                .status(HttpStatus.UNAUTHORIZED.value())
+                                .timestamp(LocalDateTime.now())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(InvalidUsernameException.class)
+    public ResponseEntity<ErrorResponse> invalidUsernameExceptionHandler(InvalidUsernameException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ErrorResponse.builder()
+                                .message(ex.getMessage())
+                                .status(HttpStatus.NOT_FOUND.value())
+                                .timestamp(LocalDateTime.now())
+                                .build()
+                );
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
 
