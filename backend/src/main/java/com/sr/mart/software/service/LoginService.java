@@ -26,7 +26,7 @@ public class LoginService {
             ));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Incorrect password");
+            throw new RuntimeException("Incorrect Password");
         }
 
         return loginMapper.mapLoginRequestToLoginResponse(user);
