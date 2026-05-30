@@ -1,11 +1,13 @@
 package com.sr.mart.software.service;
 
 import com.sr.mart.software.dto.CreateUserRequest;
+import com.sr.mart.software.dto.UpdateUserRoleRequest;
 import com.sr.mart.software.entity.Role;
 import com.sr.mart.software.entity.User;
 import com.sr.mart.software.enums.UserRoles;
 import com.sr.mart.software.exception.RoleNotFoundException;
 import com.sr.mart.software.exception.UserAlreadyExistsException;
+import com.sr.mart.software.exception.UserNotFoundException;
 import com.sr.mart.software.repository.RoleRepository;
 import com.sr.mart.software.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -38,6 +40,19 @@ public class UserService {
             .role(role)
             .build();
 
+        return userRepository.save(user);
+    }
+
+    public User updateUserRole(UpdateUserRoleRequest request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        UserRoles userRole = UserRoles.valueOf(request.getRoleName().toUpperCase());
+
+        Role role = roleRepository.findByRoleName(userRole)
+                .orElseThrow(() -> new RoleNotFoundException("Role not found"));
+
+        user.setRole(role);
         return userRepository.save(user);
     }
 
