@@ -38,9 +38,11 @@ function LoginForm() {
             navigate("/sales");
             setLoading(false);
         } catch (err) {
-            setError(
-                err?.response?.data?.message || "Invalid username or password"
-            );
+            setError(err.message);
+            setFormData({
+                username: "",
+                password: "",
+            });
         } finally {
             setLoading(false);
         }
@@ -109,7 +111,7 @@ function LoginForm() {
                         value={formData.username}
                         onChange={handleChange}
                         placeholder="Username"
-                        //  required
+                        required
                         autoComplete="off"
                         className="
                             w-full
@@ -157,7 +159,7 @@ function LoginForm() {
                         value={formData.password}
                         onChange={handleChange}
                         placeholder="Password"
-                        // required
+                        required
                         autoComplete="off"
                         className="
                             w-full

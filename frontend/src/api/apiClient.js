@@ -14,26 +14,24 @@ apiClient.interceptors.response.use(
     (response) => response,
 
     (error) => {
-        switch (error.response?.status) {
-            case 401:
-                window.location = "/login";
-                break;
+        const message = error.response?.data?.message || "Something went wrong";
 
+        switch (error.response?.status) {
             case 403:
                 alert("Access denied");
-
                 break;
 
             case 500:
                 alert("Server error");
-
                 break;
 
             default:
                 break;
         }
 
-        return Promise.reject(error);
+        const customError = new Error(message);
+        customError.status = error.response?.status;
+        return Promise.reject(customError);
     }
 );
 
