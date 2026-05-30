@@ -8,22 +8,21 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(properties = {
-	"spring.autoconfigure.exclude=" +
-		"org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration," +
-		"org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration"
+    "spring.autoconfigure.exclude="
+        + "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,"
+        + "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration"
 })
 @ActiveProfiles("test")
 class SoftwareApplicationTests {
 
-	@MockitoBean
-	private RoleRepository roleRepository;
+    @MockitoBean
+    private RoleRepository roleRepository;
 
-	@MockitoBean
-	private UserRepository userRepository;
+    @MockitoBean
+    private UserRepository userRepository;
 
-	@Test
-	void contextLoads() {
-		// TODO document why this method is empty
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

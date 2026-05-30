@@ -1,8 +1,8 @@
 package com.sr.mart.software.exception;
 
-public class InvalidUsernameException extends RuntimeException{
+public class InvalidUsernameException extends RuntimeException {
 
-    public InvalidUsernameException(String message){
+    public InvalidUsernameException(String message) {
         super(message);
     }
 }
