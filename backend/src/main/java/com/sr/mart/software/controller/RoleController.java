@@ -1,6 +1,7 @@
 package com.sr.mart.software.controller;
 
 import com.sr.mart.software.dto.CreateRoleRequest;
+import com.sr.mart.software.dto.UpdateRoleRequest;
 import com.sr.mart.software.entity.Role;
 import com.sr.mart.software.service.RoleService;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,12 @@ public class RoleController {
     @PostMapping("/role/create")
     public ResponseEntity<Role> createRole(@RequestBody CreateRoleRequest request) {
         Role res = roleService.createRole(request);
+        return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("/role/update")
+    public ResponseEntity<Role> updateRole(@RequestBody UpdateRoleRequest request ) {
+        Role res = roleService.updateRole(request);
         return ResponseEntity.ok(res);
     }
 }
