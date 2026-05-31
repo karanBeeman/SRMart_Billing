@@ -1,6 +1,6 @@
 import { ScanBarcode } from "lucide-react";
 
-function ProductScanner({ barcode, setBarcode, handleScan }) {
+function ProductScanner({ searchValue, setSearchValue, onSearch }) {
     return (
         <div
             className="
@@ -21,7 +21,7 @@ function ProductScanner({ barcode, setBarcode, handleScan }) {
                     mb-4
                 "
             >
-                Scan / Enter Product
+                Product Search
             </h2>
 
             <div className="relative">
@@ -35,11 +35,15 @@ function ProductScanner({ barcode, setBarcode, handleScan }) {
                 />
 
                 <input
-                    value={barcode}
-                    onChange={(e) => setBarcode(e.target.value)}
-                    onKeyDown={handleScan}
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            onSearch();
+                        }
+                    }}
                     placeholder="
-                        Scan barcode or enter serial no
+                        Scan barcode / Product ID / Product Name
                     "
                     className="
                         w-full
