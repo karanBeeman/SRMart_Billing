@@ -1,5 +1,6 @@
 package com.sr.mart.software;
 
+import com.sr.mart.software.repository.ProductRepository;
 import com.sr.mart.software.repository.RoleRepository;
 import com.sr.mart.software.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,9 @@ class SoftwareApplicationTests {
 
     @MockitoBean
     private UserRepository userRepository;
+
+    @MockitoBean
+    private ProductRepository productRepository;
 
     @Test
     void contextLoads() {
