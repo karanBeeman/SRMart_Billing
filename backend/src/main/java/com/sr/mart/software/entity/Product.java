@@ -26,7 +26,7 @@ public class Product extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String barcode;
 
     @Column(nullable = false)
@@ -43,10 +43,10 @@ public class Product extends BaseEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal sellingPrice;
 
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column(precision = 5, scale = 2)
     private BigDecimal cgstPercentage;
 
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column(precision = 5, scale = 2)
     private BigDecimal sgstPercentage;
 
     @Column(nullable = false)

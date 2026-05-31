@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 
 public record AddProductRequest(
 
-    @NotBlank
     String barcode,
 
     @NotBlank
@@ -23,10 +22,8 @@ public record AddProductRequest(
     @NotNull
     BigDecimal sellingPrice,
 
-    @NotNull
     BigDecimal cgstPercentage,
 
-    @NotNull
     BigDecimal sgstPercentage,
 
     @NotNull
