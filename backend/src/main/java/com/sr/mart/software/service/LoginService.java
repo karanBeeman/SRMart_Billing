@@ -22,12 +22,12 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
 
     public LoginResponse loginRequest(LoginRequest loginRequest) {
-        User user = userRepository.findByUsername(loginRequest.username()).orElseThrow(() ->
+        User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() ->
             new UserNotFoundException(
                 "Invalid username"
             ));
 
-        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new InvalidPasswordException("Incorrect password");
         }
 
