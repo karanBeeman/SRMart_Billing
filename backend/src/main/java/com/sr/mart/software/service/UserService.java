@@ -44,10 +44,10 @@ public class UserService {
     }
 
     public User updateUserRole(UpdateUserRoleRequest request) {
-        User user = userRepository.findByUsername(request.getUsername())
+        User user = userRepository.findByUsername(request.username())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        UserRoles userRole = UserRoles.valueOf(request.getRoleName().toUpperCase());
+        UserRoles userRole = UserRoles.valueOf(request.roleName().toUpperCase());
 
         Role role = roleRepository.findByRoleName(userRole)
                 .orElseThrow(() -> new RoleNotFoundException("Role not found"));
