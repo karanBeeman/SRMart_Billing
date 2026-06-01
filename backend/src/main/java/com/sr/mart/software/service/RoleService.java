@@ -15,7 +15,7 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     public Role createRole(CreateRoleRequest request) {
-        UserRoles userRole = UserRoles.valueOf(request.getRoleName().toUpperCase());
+        UserRoles userRole = UserRoles.valueOf(request.roleName().toUpperCase());
 
         boolean roleExists = roleRepository.findByRoleName(userRole).isPresent();
         if (roleExists) {
