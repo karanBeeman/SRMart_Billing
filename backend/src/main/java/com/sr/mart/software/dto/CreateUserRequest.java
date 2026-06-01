@@ -1,13 +1,15 @@
 package com.sr.mart.software.dto;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
-public class CreateUserRequest {
+public record CreateUserRequest(
+    @NotBlank(message = "Username is required")
+    String username,
 
-    private String username;
+    @NotBlank(message = "Password  is required")
+    String password,
 
-    private String password;
-
-    private String roleName;
+    @NotBlank(message = "Role name is required")
+    String roleName
+) {
 }

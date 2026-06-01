@@ -24,19 +24,19 @@ public class UserService {
 
     public User createUser(CreateUserRequest request) {
 
-        boolean userExists = userRepository.findByUsername(request.getUsername())
+        boolean userExists = userRepository.findByUsername(request.username())
                 .isPresent();
 
         if (userExists) {
             throw new UserAlreadyExistsException("Username already exists");
         }
 
-        Role role = roleRepository.findByRoleName(UserRoles.valueOf(request.getRoleName()))
+        Role role = roleRepository.findByRoleName(UserRoles.valueOf(request.roleName()))
             .orElseThrow(() -> new RoleNotFoundException("Role not found"));
 
         User user = User.builder()
-            .username(request.getUsername())
-            .password(passwordEncoder.encode(request.getPassword()))
+            .username(request.username())
+            .password(passwordEncoder.encode(request.password()))
             .role(role)
             .build();
 

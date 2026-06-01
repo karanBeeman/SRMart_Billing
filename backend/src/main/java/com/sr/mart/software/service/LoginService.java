@@ -1,10 +1,10 @@
 package com.sr.mart.software.service;
 
+import com.sr.mart.software.dto.LoginRequest;
 import com.sr.mart.software.entity.User;
 import com.sr.mart.software.exception.InvalidPasswordException;
 import com.sr.mart.software.exception.UserNotFoundException;
 import com.sr.mart.software.mapper.LoginMapper;
-import com.sr.mart.software.model.LoginRequest;
 import com.sr.mart.software.model.LoginResponse;
 import com.sr.mart.software.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -22,12 +22,12 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
 
     public LoginResponse loginRequest(LoginRequest loginRequest) {
-        User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() ->
+        User user = userRepository.findByUsername(loginRequest.username()).orElseThrow(() ->
             new UserNotFoundException(
                 "Invalid username"
             ));
 
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             throw new InvalidPasswordException("Incorrect password");
         }
 

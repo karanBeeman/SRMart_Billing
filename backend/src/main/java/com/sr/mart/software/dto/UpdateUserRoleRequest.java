@@ -1,4 +1,12 @@
 package com.sr.mart.software.dto;
 
-public record UpdateUserRoleRequest(String roleName, String username) {
+import jakarta.validation.constraints.NotBlank;
+
+public record UpdateUserRoleRequest(
+    @NotBlank(message = "Role name is required")
+    String roleName,
+
+    @NotBlank(message = "Username is required")
+    String username
+) {
 }

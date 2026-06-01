@@ -1,9 +1,9 @@
 package com.sr.mart.software.dto;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
-public class CreateRoleRequest {
-
-    private String roleName;
+public record CreateRoleRequest(
+    @NotBlank(message = "Role name is required")
+    String roleName
+) {
 }
