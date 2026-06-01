@@ -15,15 +15,15 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     public Role createRole(CreateRoleRequest request) {
+        UserRoles userRole = UserRoles.valueOf(request.getRoleName().toUpperCase());
 
-        boolean roleExists = roleRepository.findByRoleName(UserRoles.valueOf(request.getRoleName())).isPresent();
-
+        boolean roleExists = roleRepository.findByRoleName(userRole).isPresent();
         if (roleExists) {
             throw new RoleAlreadyExistsException("Role already exists");
         }
 
         Role role = Role.builder()
-            .roleName(UserRoles.valueOf(request.getRoleName().toUpperCase()))
+            .roleName(userRole)
             .build();
 
         return roleRepository.save(role);

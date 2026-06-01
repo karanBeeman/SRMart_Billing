@@ -62,8 +62,8 @@ public class GlobalExceptionHandler {
                 );
     }
 
-    @ExceptionHandler(InvalidUsernameException.class)
-    public ResponseEntity<ErrorResponse> invalidUsernameExceptionHandler(InvalidUsernameException ex) {
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> userNotFoundExceptionHandler(UserNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(
