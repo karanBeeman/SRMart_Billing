@@ -24,11 +24,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.builder()
-                        .message(errorMessage)
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .timestamp(LocalDateTime.now())
-                        .build()
+                .body(new ErrorResponse(
+                        errorMessage,
+                        HttpStatus.BAD_REQUEST.value(),
+                        LocalDateTime.now()
+                        )
                 );
     }
 
@@ -37,11 +37,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
             .status(HttpStatus.CONFLICT)
-            .body(ErrorResponse.builder()
-                    .message(ex.getMessage())
-                    .status(HttpStatus.CONFLICT.value())
-                    .timestamp(LocalDateTime.now())
-                    .build()
+            .body(new ErrorResponse(
+                        ex.getMessage(),
+                        HttpStatus.CONFLICT.value(),
+                        LocalDateTime.now()
+                    )
             );
     }
 
@@ -50,11 +50,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
-            .body(ErrorResponse.builder()
-                    .message(ex.getMessage())
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .timestamp(LocalDateTime.now())
-                    .build()
+            .body(new ErrorResponse(
+                            ex.getMessage(),
+                            HttpStatus.NOT_FOUND.value(),
+                            LocalDateTime.now()
+                    )
             );
     }
 
@@ -62,12 +62,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> roleAlreadyExistsExceptionHandler(RoleAlreadyExistsException ex) {
         return ResponseEntity
             .status(HttpStatus.CONFLICT)
-            .body(
-                ErrorResponse.builder()
-                    .message(ex.getMessage())
-                    .status(HttpStatus.CONFLICT.value())
-                    .timestamp(LocalDateTime.now())
-                    .build()
+            .body(new ErrorResponse(
+                            ex.getMessage(),
+                            HttpStatus.NOT_FOUND.value(),
+                            LocalDateTime.now()
+                    )
             );
     }
 
@@ -75,12 +74,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> invalidPasswordExceptionHandler(InvalidPasswordException ex) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(
-                        ErrorResponse.builder()
-                                .message(ex.getMessage())
-                                .status(HttpStatus.UNAUTHORIZED.value())
-                                .timestamp(LocalDateTime.now())
-                                .build()
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.UNAUTHORIZED.value(),
+                                LocalDateTime.now()
+                        )
                 );
     }
 
@@ -88,12 +86,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> userNotFoundExceptionHandler(UserNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(
-                        ErrorResponse.builder()
-                                .message(ex.getMessage())
-                                .status(HttpStatus.NOT_FOUND.value())
-                                .timestamp(LocalDateTime.now())
-                                .build()
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.NOT_FOUND.value(),
+                                LocalDateTime.now()
+                        )
                 );
     }
 
@@ -102,11 +99,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ErrorResponse.builder()
-                    .message("Internal Server Error")
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .timestamp(LocalDateTime.now())
-                    .build()
+            .body(new ErrorResponse(
+                            ex.getMessage(),
+                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                            LocalDateTime.now()
+                    )
             );
     }
 }

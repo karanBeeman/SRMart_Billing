@@ -1,6 +1,6 @@
 package com.sr.mart.software.controller;
 
-import com.sr.mart.software.model.LoginRequest;
+import com.sr.mart.software.dto.LoginRequest;
 import com.sr.mart.software.model.LoginResponse;
 import com.sr.mart.software.service.LoginService;
 import lombok.AllArgsConstructor;
