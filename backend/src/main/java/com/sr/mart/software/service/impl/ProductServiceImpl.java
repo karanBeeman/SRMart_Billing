@@ -57,13 +57,6 @@ public class ProductServiceImpl implements ProductService {
                 .orElse(null);
         }
 
-        // 3. Search by product name
-        if (product == null) {
-            product = productRepository
-                .findByProductNameIgnoreCase(searchValue)
-                .orElse(null);
-        }
-
         if (product == null) {
             throw new RuntimeException(
                 "Product not found for: " + searchValue

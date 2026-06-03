@@ -34,7 +34,7 @@ public class ProductController {
             .body(response);
     }
 
-    @GetMapping("/search/product")
+    @GetMapping("/search/product/lookup")
     public ResponseEntity<ProductResponse> searchProduct(@RequestParam("value") String searchValue) {
         ProductResponse response = productService.searchProduct(searchValue);
         return ResponseEntity.ok(response);
