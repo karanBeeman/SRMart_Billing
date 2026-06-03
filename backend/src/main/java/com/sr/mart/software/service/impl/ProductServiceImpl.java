@@ -40,4 +40,36 @@ public class ProductServiceImpl implements ProductService {
 
         return ProductResponse.from(savedProduct);
     }
+
+    @Override
+    public ProductResponse searchProduct(String searchValue) {
+        Product product = null;
+
+        // 1. Search by barcode
+        product = productRepository
+            .findByBarcode(searchValue)
+            .orElse(null);
+
+        // 2. Search by product ID
+        if (product == null && searchValue.matches("\\d+")) {
+            product = productRepository
+                .findById(Long.valueOf(searchValue))
+                .orElse(null);
+        }
+
+        // 3. Search by product name
+        if (product == null) {
+            product = productRepository
+                .findByProductNameIgnoreCase(searchValue)
+                .orElse(null);
+        }
+
+        if (product == null) {
+            throw new RuntimeException(
+                "Product not found for: " + searchValue
+            );
+        }
+
+        return ProductResponse.from(product);
+    }
 }

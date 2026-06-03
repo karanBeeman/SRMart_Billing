@@ -6,4 +6,6 @@ import com.sr.mart.software.model.ProductResponse;
 public interface ProductService {
 
     ProductResponse addProduct(AddProductRequest request);
+
+    ProductResponse searchProduct(String searchValue);
 }

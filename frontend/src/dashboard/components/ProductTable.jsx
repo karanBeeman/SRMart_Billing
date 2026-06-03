@@ -13,30 +13,30 @@ function ProductTable({ products, updateQty, removeProduct }) {
                 mb-6
             "
         >
-            <table className="w-full">
+            <table className="w-full table-fixed">
                 <thead>
                     <tr
                         className="
-                        text-gray-200
-                        border-b
-                        border-white/10
-                    "
+                            text-gray-200
+                            border-b
+                            border-white/10
+                        "
                     >
-                        <th>Product</th>
+                        <th className="py-3 text-left">Product</th>
 
-                        <th>Qty</th>
+                        <th className="py-3 text-center">Qty</th>
 
-                        <th>MRP</th>
+                        <th className="py-3 text-center">MRP</th>
 
-                        <th>Selling</th>
+                        <th className="py-3 text-center">Selling</th>
 
-                        <th>GST%</th>
+                        <th className="py-3 text-center">GST%</th>
 
-                        <th>CGST%</th>
+                        <th className="py-3 text-center">CGST%</th>
 
-                        <th>Total</th>
+                        <th className="py-3 text-center">Total</th>
 
-                        <th>Delete</th>
+                        <th className="py-3 text-center">Delete</th>
                     </tr>
                 </thead>
 
@@ -45,22 +45,25 @@ function ProductTable({ products, updateQty, removeProduct }) {
                         <tr
                             key={product.id}
                             className="
-                            border-b
-                            border-white/10
-                        "
+                                border-b
+                                border-white/10
+                            "
                         >
                             <td
                                 className="
-                                py-4
-                                text-white
-                            "
+                                    py-4
+                                    text-white
+                                    text-left
+                                    font-medium
+                                "
                             >
-                                {product.name}
+                                {product.productName}
                             </td>
 
-                            <td>
+                            <td className="text-center">
                                 <input
                                     type="number"
+                                    min="1"
                                     value={product.qty}
                                     onChange={(e) =>
                                         updateQty(
@@ -69,35 +72,57 @@ function ProductTable({ products, updateQty, removeProduct }) {
                                         )
                                     }
                                     className="
-                                    w-20
-                                    p-2
-                                    rounded
-                                    bg-white/10
-                                    text-white
-                                    text-center
-                                "
+                                        w-20
+                                        p-2
+                                        rounded
+                                        bg-white/10
+                                        text-white
+                                        text-center
+                                        border
+                                        border-white/10
+                                    "
                                 />
                             </td>
 
-                            <td className="text-white">₹{product.mrp}</td>
+                            <td className="text-center text-white">
+                                ₹{product.mrpPrice}
+                            </td>
 
-                            <td className="text-white">
+                            <td className="text-center text-white">
                                 ₹{product.sellingPrice}
                             </td>
 
-                            <td className="text-white">{product.gst}</td>
+                            <td className="text-center text-white">
+                                {product.sgstPercentage ?? 0}
+                            </td>
 
-                            <td className="text-white">{product.cgst}</td>
+                            <td className="text-center text-white">
+                                {product.cgstPercentage ?? 0}
+                            </td>
 
-                            <td className="text-white">₹{product.total}</td>
+                            <td
+                                className="
+                                    text-center
+                                    text-white
+                                    font-semibold
+                                "
+                            >
+                                ₹
+                                {(product.sellingPrice * product.qty).toFixed(
+                                    2
+                                )}
+                            </td>
 
-                            <td>
+                            <td className="text-center">
                                 <Trash2
+                                    size={20}
                                     onClick={() => removeProduct(product.id)}
                                     className="
-                                    text-red-300
-                                    cursor-pointer
-                                "
+                                        text-red-300
+                                        cursor-pointer
+                                        mx-auto
+                                        hover:text-red-400
+                                    "
                                 />
                             </td>
                         </tr>
