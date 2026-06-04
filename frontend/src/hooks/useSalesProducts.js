@@ -86,13 +86,49 @@ export default function useSalesProducts(inputRef) {
         }
     };
 
+    const updateSellingPrice = (productId, newPrice) => {
+        setProducts((previous) =>
+            previous.map((product) =>
+                product.id === productId
+                    ? {
+                          ...product,
+                          sellingPrice: newPrice,
+                          total: newPrice * product.qty,
+                      }
+                    : product
+            )
+        );
+    };
+
+    const updateQty = (productId, qty) => {
+        setProducts((previous) =>
+            previous.map((product) =>
+                product.id === productId
+                    ? {
+                          ...product,
+                          qty,
+                          total: product.sellingPrice * qty,
+                      }
+                    : product
+            )
+        );
+    };
+
+    const removeProduct = (productId) => {
+        setProducts((previous) =>
+            previous.filter((product) => product.id !== productId)
+        );
+    };
+
     return {
         searchValue,
         products,
         suggestions,
-        setProducts,
         handleProductSearch,
         handleProductLookup,
         addProductToBill,
+        updateQty,
+        updateSellingPrice,
+        removeProduct,
     };
 }

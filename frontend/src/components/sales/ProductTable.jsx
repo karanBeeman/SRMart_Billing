@@ -1,6 +1,11 @@
 import { Trash2 } from "lucide-react";
 
-function ProductTable({ products, updateQty, removeProduct }) {
+function ProductTable({
+    products,
+    updateQty,
+    updateSellingPrice,
+    removeProduct,
+}) {
     return (
         <div
             className="
@@ -30,9 +35,9 @@ function ProductTable({ products, updateQty, removeProduct }) {
 
                         <th className="py-3 text-center">Selling</th>
 
-                        <th className="py-3 text-center">GST%</th>
-
                         <th className="py-3 text-center">CGST%</th>
+
+                        <th className="py-3 text-center">SGST%</th>
 
                         <th className="py-3 text-center">Total</th>
 
@@ -72,15 +77,16 @@ function ProductTable({ products, updateQty, removeProduct }) {
                                         )
                                     }
                                     className="
-                                        w-20
-                                        p-2
-                                        rounded
-                                        bg-white/10
-                                        text-white
-                                        text-center
-                                        border
-                                        border-white/10
-                                    "
+                                    no-spinner
+            w-20
+            p-2
+            rounded
+            bg-white/10
+            text-white
+            text-center
+            border
+            border-white/10
+        "
                                 />
                             </td>
 
@@ -88,8 +94,27 @@ function ProductTable({ products, updateQty, removeProduct }) {
                                 ₹{product.mrpPrice}
                             </td>
 
-                            <td className="text-center text-white">
-                                ₹{product.sellingPrice}
+                            <td className="text-center">
+                                <input
+                                    type="text"
+                                    value={product.sellingPrice}
+                                    onChange={(e) =>
+                                        updateSellingPrice(
+                                            product.id,
+                                            Number(e.target.value)
+                                        )
+                                    }
+                                    className="
+           w-20
+        p-2
+        rounded
+        bg-white/10
+        text-white
+        text-center
+        border
+        border-white/10
+        "
+                                />
                             </td>
 
                             <td className="text-center text-white">
