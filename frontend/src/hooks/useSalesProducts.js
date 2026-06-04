@@ -1,7 +1,7 @@
 import { useState } from "react";
 import productService from "../services/productService";
 
-export default function useSalesProducts() {
+export default function useSalesProducts(inputRef) {
     const [searchValue, setSearchValue] = useState("");
     const [products, setProducts] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
@@ -66,6 +66,7 @@ export default function useSalesProducts() {
 
         setSearchValue("");
         setSuggestions([]);
+        inputRef.current?.focus();
     };
 
     const handleProductLookup = async () => {

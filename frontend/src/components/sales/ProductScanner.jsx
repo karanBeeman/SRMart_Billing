@@ -6,6 +6,7 @@ function ProductScanner({
     suggestions,
     onLookup,
     onSelectProduct,
+    inputRef,
 }) {
     return (
         <div
@@ -41,6 +42,7 @@ function ProductScanner({
                 />
 
                 <input
+                    ref={inputRef}
                     value={searchValue}
                     onChange={(e) => onSearch(e.target.value)}
                     onKeyDown={(e) => {

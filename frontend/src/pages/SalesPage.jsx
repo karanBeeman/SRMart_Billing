@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useAuth } from "../auth/hooks/useAuth.js";
 
@@ -13,6 +13,12 @@ import useSalesProducts from "../hooks/useSalesProducts.js";
 import useInvoiceSummary from "../hooks/useInvoiceSummary.js";
 
 function SalesPage() {
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
+
     const { user } = useAuth();
 
     const [invoiceNumber] = useState(`INV-${Date.now()}`);
@@ -35,7 +41,7 @@ function SalesPage() {
         handleProductSearch,
         handleProductLookup,
         addProductToBill,
-    } = useSalesProducts();
+    } = useSalesProducts(inputRef);
 
     const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
 
@@ -53,6 +59,7 @@ function SalesPage() {
                 onLookup={handleProductLookup}
                 suggestions={suggestions}
                 onSelectProduct={addProductToBill}
+                inputRef={inputRef}
             />
 
             <ProductTable products={products} setProducts={setProducts} />
