@@ -2,9 +2,11 @@ package com.sr.mart.software.service.impl;
 
 import com.sr.mart.software.dto.AddProductRequest;
 import com.sr.mart.software.entity.Product;
+import com.sr.mart.software.exception.ProductNotFoundException;
 import com.sr.mart.software.model.ProductResponse;
 import com.sr.mart.software.repository.ProductRepository;
 import com.sr.mart.software.service.ProductService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,26 +45,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse searchProduct(String searchValue) {
-        Product product = null;
-
-        // 1. Search by barcode
-        product = productRepository
-            .findByBarcode(searchValue)
-            .orElse(null);
-
-        // 2. Search by product ID
-        if (product == null && searchValue.matches("\\d+")) {
-            product = productRepository
-                .findById(Long.valueOf(searchValue))
-                .orElse(null);
-        }
-
-        if (product == null) {
-            throw new RuntimeException(
-                "Product not found for: " + searchValue
+        return productRepository.findByBarcode(searchValue)
+            .or(() -> searchValue.matches("\\d+")
+                ? productRepository.findById(Long.valueOf(searchValue))
+                : Optional.empty())
+            .or(() -> productRepository
+                .findByProductNameIgnoreCase(searchValue))
+            .map(ProductResponse::from)
+            .orElseThrow(() ->
+                new ProductNotFoundException(
+                    "Product not found: " + searchValue
+                )
             );
-        }
-
-        return ProductResponse.from(product);
     }
 }

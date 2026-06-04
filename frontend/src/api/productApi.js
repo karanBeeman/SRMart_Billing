@@ -1,16 +1,16 @@
 import apiClient from "./apiClient";
 
 const productApi = {
-    search(value) {
-        return apiClient.get(
-            "/search/product",
+    lookup(value) {
+        return apiClient.get("/products/lookup", {
+            params: { value },
+        });
+    },
 
-            {
-                params: {
-                    value,
-                },
-            }
-        );
+    search(value) {
+        return apiClient.get("/products/search", {
+            params: { value },
+        });
     },
 };
 

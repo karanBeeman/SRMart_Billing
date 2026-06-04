@@ -106,4 +106,17 @@ public class GlobalExceptionHandler {
                     )
             );
     }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorResponse> productNotFoundExcpectionHandler(Exception ex) {
+
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(new ErrorResponse(
+                            ex.getMessage(),
+                            HttpStatus.NOT_FOUND.value(),
+                            LocalDateTime.now()
+                    )
+            );
+    }
 }
