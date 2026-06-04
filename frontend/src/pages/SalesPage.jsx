@@ -37,10 +37,12 @@ function SalesPage() {
         searchValue,
         products,
         suggestions,
-        setProducts,
         handleProductSearch,
         handleProductLookup,
         addProductToBill,
+        updateQty,
+        updateSellingPrice,
+        removeProduct,
     } = useSalesProducts(inputRef);
 
     const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
@@ -62,7 +64,12 @@ function SalesPage() {
                 inputRef={inputRef}
             />
 
-            <ProductTable products={products} setProducts={setProducts} />
+            <ProductTable
+                products={products}
+                updateQty={updateQty}
+                updateSellingPrice={updateSellingPrice}
+                removeProduct={removeProduct}
+            />
 
             <InvoiceSummary subtotal={subtotal} gst={gst} total={total} />
 
