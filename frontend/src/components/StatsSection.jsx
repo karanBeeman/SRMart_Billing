@@ -1,4 +1,4 @@
-import StatCard from "./StatCard";
+import StatCard from "./StatCard.jsx";
 
 function StatsSection() {
     const stats = [

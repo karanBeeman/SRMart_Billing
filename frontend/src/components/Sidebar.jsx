@@ -9,7 +9,7 @@ import {
     ShoppingCart,
 } from "lucide-react";
 
-import SidebarItem from "./SidebarItem";
+import SidebarItem from "./SidebarItem.jsx";
 
 function Sidebar() {
     return (

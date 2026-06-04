@@ -2,11 +2,9 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import LoginPage from "./auth/pages/LoginPage";
 
-import SalesPage from "./dashboard/pages/SalesPage";
+import SalesPage from "./pages/SalesPage";
 
-import DashboardPage from "./dashboard/pages/DashboardPage";
-
-import CustomerPage from "./dashboard/pages/CustomerPage";
+import DashboardPage from "./pages/DashboardPage";
 
 import ProtectedRoute from "./auth/components/ProtectedRoute";
 
@@ -31,15 +29,6 @@ function App() {
                 element={
                     <ProtectedRoute roles={["ADMIN", "MANAGER"]}>
                         <DashboardPage />
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/customers"
-                element={
-                    <ProtectedRoute roles={["ADMIN", "BILLER"]}>
-                        <CustomerPage />
                     </ProtectedRoute>
                 }
             />

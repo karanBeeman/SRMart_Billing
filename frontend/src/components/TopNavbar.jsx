@@ -1,6 +1,6 @@
 import { Bell, Search } from "lucide-react";
 
-import { useAuth } from "../../auth/hooks/useAuth";
+import { useAuth } from "../auth/hooks/useAuth.js";
 
 function TopNavbar() {
     const { user } = useAuth();

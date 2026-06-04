@@ -1,9 +1,9 @@
-import DashboardContainer from "../components/DashboardContainer";
+import DashboardContainer from "../components/DashboardContainer.jsx";
 
-import StatsSection from "../components/StatsSection";
-import RevenuePanel from "../components/RevenuePanel";
-import QuickActions from "../components/QuickActions";
-import InvoiceTable from "../components/InvoiceTable";
+import StatsSection from "../components/StatsSection.jsx";
+import RevenuePanel from "../components/RevenuePanel.jsx";
+import QuickActions from "../components/QuickActions.jsx";
+import InvoiceTable from "../components/sales/InvoiceTable.jsx";
 
 function DashboardPage() {
     return (

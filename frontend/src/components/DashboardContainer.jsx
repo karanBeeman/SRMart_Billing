@@ -1,6 +1,6 @@
-import Sidebar from "./Sidebar";
-import TopNavbar from "./TopNavbar";
-import AppBackground from "../../shared/AppBackground.jsx";
+import Sidebar from "./Sidebar.jsx";
+import TopNavbar from "./TopNavbar.jsx";
+import AppBackground from "../shared/AppBackground.jsx";
 
 function DashboardContainer({ children }) {
     return (
