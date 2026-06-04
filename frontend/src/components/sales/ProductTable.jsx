@@ -9,23 +9,23 @@ function ProductTable({
     return (
         <div
             className="
-                bg-white/10
-                backdrop-blur-lg
-                border
-                border-white/20
-                rounded-2xl
-                p-6
-                mb-6
-            "
+                    bg-white/10
+                    backdrop-blur-lg
+                    border
+                    border-white/20
+                    rounded-2xl
+                    p-6
+                    mb-6
+                "
         >
             <table className="w-full table-fixed">
                 <thead>
                     <tr
                         className="
-                            text-gray-200
-                            border-b
-                            border-white/10
-                        "
+                                text-gray-200
+                                border-b
+                                border-white/10
+                            "
                     >
                         <th className="py-3 text-left">Product</th>
 
@@ -50,17 +50,17 @@ function ProductTable({
                         <tr
                             key={product.id}
                             className="
-                                border-b
-                                border-white/10
-                            "
+                                    border-b
+                                    border-white/10
+                                "
                         >
                             <td
                                 className="
-                                    py-4
-                                    text-white
-                                    text-left
-                                    font-medium
-                                "
+                                        py-4
+                                        text-white
+                                        text-left
+                                        font-medium
+                                    "
                             >
                                 {product.productName}
                             </td>
@@ -71,22 +71,27 @@ function ProductTable({
                                     min="1"
                                     value={product.qty}
                                     onChange={(e) =>
+                                        updateQty(product.id, e.target.value)
+                                    }
+                                    onBlur={(e) => {
+                                        const qty = Number(e.target.value);
+
                                         updateQty(
                                             product.id,
-                                            Number(e.target.value)
-                                        )
-                                    }
+                                            qty > 0 ? qty : 1
+                                        );
+                                    }}
                                     className="
-                                    no-spinner
-            w-20
-            p-2
-            rounded
-            bg-white/10
-            text-white
-            text-center
-            border
-            border-white/10
-        "
+                                        no-spinner
+                w-20
+                p-2
+                rounded
+                bg-white/10
+                text-white
+                text-center
+                border
+                border-white/10
+            "
                                 />
                             </td>
 
@@ -105,32 +110,32 @@ function ProductTable({
                                         )
                                     }
                                     className="
-           w-20
-        p-2
-        rounded
-        bg-white/10
-        text-white
-        text-center
-        border
-        border-white/10
-        "
+               w-20
+            p-2
+            rounded
+            bg-white/10
+            text-white
+            text-center
+            border
+            border-white/10
+            "
                                 />
-                            </td>
-
-                            <td className="text-center text-white">
-                                {product.sgstPercentage ?? 0}
                             </td>
 
                             <td className="text-center text-white">
                                 {product.cgstPercentage ?? 0}
                             </td>
 
+                            <td className="text-center text-white">
+                                {product.sgstPercentage ?? 0}
+                            </td>
+
                             <td
                                 className="
-                                    text-center
-                                    text-white
-                                    font-semibold
-                                "
+                                        text-center
+                                        text-white
+                                        font-semibold
+                                    "
                             >
                                 ₹
                                 {(product.sellingPrice * product.qty).toFixed(
@@ -143,11 +148,11 @@ function ProductTable({
                                     size={20}
                                     onClick={() => removeProduct(product.id)}
                                     className="
-                                        text-red-300
-                                        cursor-pointer
-                                        mx-auto
-                                        hover:text-red-400
-                                    "
+                                            text-red-300
+                                            cursor-pointer
+                                            mx-auto
+                                            hover:text-red-400
+                                        "
                                 />
                             </td>
                         </tr>

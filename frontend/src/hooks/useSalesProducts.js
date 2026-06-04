@@ -107,7 +107,7 @@ export default function useSalesProducts(inputRef) {
                     ? {
                           ...product,
                           qty,
-                          total: product.sellingPrice * qty,
+                          total: Number(qty || 0) * product.sellingPrice,
                       }
                     : product
             )
