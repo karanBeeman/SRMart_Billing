@@ -23,50 +23,6 @@ function TopNavbar() {
                 mb-8
             "
         >
-            {/* Search */}
-
-            <div
-                className="
-                    flex
-                    items-center
-
-                    w-[350px]
-
-                    bg-white/10
-                    backdrop-blur-md
-
-                    border
-                    border-white/20
-
-                    rounded-xl
-
-                    px-4
-                    py-3
-                "
-            >
-                <Search
-                    size={18}
-                    className="
-                        text-white
-                        mr-3
-                    "
-                />
-
-                <input
-                    type="text"
-                    placeholder="
-                        Search...
-                    "
-                    className="
-                        bg-transparent
-                        outline-none
-                        text-white
-                        placeholder:text-gray-200
-                        w-full
-                    "
-                />
-            </div>
-
             {/* Right side */}
 
             <div

@@ -22,10 +22,9 @@ The Sales Page is the primary billing screen used by cashiers to create invoices
 
 Current behaviour:
 
-* If the scanned product already exists in the bill:
-
-    * Quantity is incremented by 1.
-    * No duplicate row is created.
+- If the scanned product already exists in the bill:
+    - Quantity is incremented by 1.
+    - No duplicate row is created.
 
 Example:
 
@@ -39,8 +38,8 @@ Qty = 2
 
 Reason:
 
-* Faster billing process.
-* Matches common supermarket POS behaviour.
+- Faster billing process.
+- Matches common supermarket POS behaviour.
 
 ---
 
@@ -59,10 +58,10 @@ Examples:
 
 Design decisions:
 
-* Browser spinner arrows are disabled.
-* User may temporarily clear the field while editing.
-* Validation occurs when editing completes.
-* Minimum allowed quantity is 1.
+- Browser spinner arrows are disabled.
+- User may temporarily clear the field while editing.
+- Validation occurs when editing completes.
+- Minimum allowed quantity is 1.
 
 ### Editable Selling Price
 
@@ -70,9 +69,9 @@ Selling price can be modified by the cashier.
 
 Use cases:
 
-* Manual discounts
-* Promotional pricing
-* Manager-approved overrides
+- Manual discounts
+- Promotional pricing
+- Manager-approved overrides
 
 MRP remains read-only.
 
@@ -102,16 +101,16 @@ Subtotal + GST
 
 Stores:
 
-* Customer Name
-* Mobile Number
-* Address
-* Loyalty Points
+- Customer Name
+- Mobile Number
+- Address
+- Loyalty Points
 
 Future Enhancements:
 
-* Customer search
-* Customer history
-* Loyalty redemption
+- Customer search
+- Customer history
+- Loyalty redemption
 
 ---
 
@@ -133,11 +132,11 @@ CustomerSection
 
 ## Future Improvements
 
-* Payment screen
-* Cash/Card/UPI support
-* Discount column
-* Hold bill functionality
-* Product return flow
-* Keyboard shortcuts
-* Barcode scanner settings
-* Duplicate item handling configuration
+- Payment screen
+- Cash/Card/UPI support
+- Discount column
+- Hold bill functionality
+- Product return flow
+- Keyboard shortcuts
+- Barcode scanner settings
+- Duplicate item handling configuration
