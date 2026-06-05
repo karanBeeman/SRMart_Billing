@@ -14,8 +14,6 @@ apiClient.interceptors.response.use(
     (response) => response,
 
     (error) => {
-        const message = error.response?.data?.message || "Something went wrong";
-
         switch (error.response?.status) {
             case 403:
                 alert("Access denied");
@@ -29,9 +27,7 @@ apiClient.interceptors.response.use(
                 break;
         }
 
-        const customError = new Error(message);
-        customError.status = error.response?.status;
-        return Promise.reject(customError);
+        return Promise.reject(error);
     }
 );
 

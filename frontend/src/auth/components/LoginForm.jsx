@@ -73,12 +73,35 @@ function LoginForm() {
 
             <div
                 className="
-                    flex
-                    justify-center
-                    mb-10
-                "
+        flex
+        flex-col
+        items-center
+        mb-10
+    "
             >
-                <ShoppingCart size={70} color="white" strokeWidth={1.7} />
+                <ShoppingCart size={64} color="white" strokeWidth={1.7} />
+
+                <h1
+                    className="
+            text-white
+            text-4xl
+            font-extrabold
+            mt-3
+            tracking-wide
+        "
+                >
+                    SR MART
+                </h1>
+
+                <p
+                    className="
+            text-white/70
+            text-sm
+            mt-1
+        "
+                >
+                    Billing & Inventory System
+                </p>
             </div>
 
             {/* Form */}

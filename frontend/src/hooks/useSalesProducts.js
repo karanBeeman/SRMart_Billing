@@ -1,39 +1,51 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { toast } from "react-toastify";
 import productService from "../services/productService";
 
 export default function useSalesProducts(inputRef) {
     const [searchValue, setSearchValue] = useState("");
     const [products, setProducts] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
+    const searchTimerRef = useRef(null);
 
-    const handleProductSearch = async (value) => {
+    const handleProductSearch = (value) => {
         setSearchValue(value);
 
         const trimmedValue = value.trim();
 
         if (!trimmedValue) {
             setSuggestions([]);
+
             return;
         }
 
         if (/^\d+$/.test(trimmedValue)) {
             setSuggestions([]);
+
             return;
         }
 
-        if (trimmedValue.length < 2) {
+        if (trimmedValue.length < 3) {
             setSuggestions([]);
+
             return;
         }
 
-        try {
-            const products = await productService.search(trimmedValue);
-
-            setSuggestions(Array.isArray(products) ? products : []);
-        } catch (error) {
-            console.error(error);
-            setSuggestions([]);
+        if (searchTimerRef.current) {
+            clearTimeout(searchTimerRef.current);
         }
+
+        searchTimerRef.current = setTimeout(async () => {
+            try {
+                const products = await productService.search(trimmedValue);
+
+                setSuggestions(Array.isArray(products) ? products : []);
+            } catch (error) {
+                console.error(error);
+
+                setSuggestions([]);
+            }
+        }, 300);
     };
 
     const addProductToBill = (product) => {
@@ -82,7 +94,12 @@ export default function useSalesProducts(inputRef) {
             setSearchValue("");
             setSuggestions([]);
         } catch (error) {
-            console.error("Product lookup failed", error);
+            console.log("error", error);
+            console.log("error.response", error?.response);
+            toast.error(error?.response?.data?.message || "Product not found");
+            setSearchValue("");
+            setSuggestions([]);
+            inputRef.current?.focus();
         }
     };
 
