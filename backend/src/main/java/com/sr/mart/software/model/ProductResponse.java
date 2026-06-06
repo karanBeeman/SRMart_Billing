@@ -36,4 +36,18 @@ public record ProductResponse(
             product.getUpdatedAt()
         );
     }
+
+    public record Suggestion(
+        Long id,
+        String productName,
+        BigDecimal sellingPrice
+    ) {
+        public static Suggestion from(Product product) {
+            return new Suggestion(
+                product.getId(),
+                product.getProductName(),
+                product.getSellingPrice()
+            );
+        }
+    }
 }
