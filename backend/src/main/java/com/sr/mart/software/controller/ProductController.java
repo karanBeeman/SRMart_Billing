@@ -5,6 +5,7 @@ import com.sr.mart.software.model.ProductResponse;
 import com.sr.mart.software.service.ProductService;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,4 +41,12 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("products/search")
+    public ResponseEntity<List<ProductResponse.Suggestion>> searchProducts(
+        @RequestParam("value") String searchValue,
+        @RequestParam(name = "size", defaultValue = "10") int size
+    ) {
+        List<ProductResponse.Suggestion> response = productService.searchProducts(searchValue, size);
+        return ResponseEntity.ok(response);
+    }
 }
