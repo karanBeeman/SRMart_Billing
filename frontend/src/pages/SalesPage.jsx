@@ -37,12 +37,18 @@ function SalesPage() {
         searchValue,
         products,
         suggestions,
+
+        activeIndex,
+        setActiveIndex,
+
         handleProductSearch,
         handleProductLookup,
         addProductToBill,
+
         updateQty,
         updateSellingPrice,
         removeProduct,
+        clearSuggestions,
     } = useSalesProducts(inputRef);
 
     const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
@@ -59,9 +65,12 @@ function SalesPage() {
                 searchValue={searchValue}
                 onSearch={handleProductSearch}
                 onLookup={handleProductLookup}
+                activeIndex={activeIndex}
+                setActiveIndex={setActiveIndex}
                 suggestions={suggestions}
                 onSelectProduct={addProductToBill}
                 inputRef={inputRef}
+                clearSuggestions={clearSuggestions}
             />
 
             <ProductTable

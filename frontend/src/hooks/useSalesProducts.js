@@ -7,6 +7,11 @@ export default function useSalesProducts(inputRef) {
     const [products, setProducts] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
     const searchTimerRef = useRef(null);
+    const [activeIndex, setActiveIndex] = useState(-1);
+    const clearSuggestions = () => {
+        setSuggestions([]);
+        setActiveIndex(-1);
+    };
 
     const handleProductSearch = (value) => {
         setSearchValue(value);
@@ -15,18 +20,21 @@ export default function useSalesProducts(inputRef) {
 
         if (!trimmedValue) {
             setSuggestions([]);
+            setActiveIndex(-1);
 
             return;
         }
 
         if (/^\d+$/.test(trimmedValue)) {
             setSuggestions([]);
+            setActiveIndex(-1);
 
             return;
         }
 
         if (trimmedValue.length < 3) {
             setSuggestions([]);
+            setActiveIndex(-1);
 
             return;
         }
@@ -39,11 +47,16 @@ export default function useSalesProducts(inputRef) {
             try {
                 const products = await productService.search(trimmedValue);
 
-                setSuggestions(Array.isArray(products) ? products : []);
+                const result = Array.isArray(products) ? products : [];
+
+                setSuggestions(result);
+
+                setActiveIndex(result.length > 0 ? 0 : -1);
             } catch (error) {
                 console.error(error);
 
                 setSuggestions([]);
+                setActiveIndex(-1);
             }
         }, 300);
     };
@@ -78,6 +91,7 @@ export default function useSalesProducts(inputRef) {
 
         setSearchValue("");
         setSuggestions([]);
+        setActiveIndex(-1);
         inputRef.current?.focus();
     };
 
@@ -93,6 +107,7 @@ export default function useSalesProducts(inputRef) {
 
             setSearchValue("");
             setSuggestions([]);
+            setActiveIndex(-1);
         } catch (error) {
             console.log("error", error);
             console.log("error.response", error?.response);
@@ -141,11 +156,16 @@ export default function useSalesProducts(inputRef) {
         searchValue,
         products,
         suggestions,
+        activeIndex,
+        setActiveIndex,
+
         handleProductSearch,
         handleProductLookup,
         addProductToBill,
+
         updateQty,
         updateSellingPrice,
         removeProduct,
+        clearSuggestions,
     };
 }

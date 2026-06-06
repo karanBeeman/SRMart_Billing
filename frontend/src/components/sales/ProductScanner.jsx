@@ -1,4 +1,5 @@
 import { ScanBarcode } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 function ProductScanner({
     searchValue,
@@ -6,16 +7,45 @@ function ProductScanner({
     suggestions,
     onLookup,
     onSelectProduct,
+    activeIndex,
+    setActiveIndex,
+    clearSuggestions,
     inputRef,
 }) {
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                containerRef.current &&
+                !containerRef.current.contains(event.target)
+            ) {
+                clearSuggestions();
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [clearSuggestions]);
+
     return (
         <div
+            ref={containerRef}
             className="
+                relative
+                z-50
+
                 bg-white/10
                 backdrop-blur-lg
+
                 border
                 border-white/20
+
                 rounded-2xl
+
                 p-6
                 mb-6
             "
@@ -46,21 +76,63 @@ function ProductScanner({
                     value={searchValue}
                     onChange={(e) => onSearch(e.target.value)}
                     onKeyDown={(e) => {
+                        if (e.key === "ArrowDown" && suggestions.length > 0) {
+                            e.preventDefault();
+
+                            setActiveIndex((prev) =>
+                                prev < suggestions.length - 1 ? prev + 1 : prev
+                            );
+
+                            return;
+                        }
+
+                        if (e.key === "ArrowUp" && suggestions.length > 0) {
+                            e.preventDefault();
+
+                            setActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
+
+                            return;
+                        }
+
+                        if (
+                            e.key === "Enter" &&
+                            activeIndex >= 0 &&
+                            suggestions.length > 0
+                        ) {
+                            e.preventDefault();
+
+                            onSelectProduct(suggestions[activeIndex]);
+
+                            return;
+                        }
+
+                        if (e.key === "Escape") {
+                            clearSuggestions();
+                            return;
+                        }
+
                         if (e.key === "Enter") {
                             onLookup();
                         }
                     }}
-                    placeholder="Scan barcode / Product ID / Product Name"
+                    placeholder="
+                        Scan barcode / Product ID / Product Name
+                    "
                     className="
                         w-full
                         pl-12
                         py-4
+
                         rounded-xl
+
                         bg-white/10
+
                         border
                         border-white/20
+
                         text-white
                         placeholder:text-gray-300
+
                         outline-none
                     "
                 />
@@ -68,48 +140,72 @@ function ProductScanner({
                 {suggestions.length > 0 && (
                     <div
                         className="
-                                absolute
-                                left-0
-                                right-0
-                                top-full
-                                mt-2
+                            absolute
+                            left-0
+                            right-0
+                            top-full
+                            mt-2
 
-                                rounded-xl
+                            rounded-xl
 
-                                bg-[#2347D9]
+                            bg-[#2347D9]
 
-                                border
-                                border-white/20
+                            border
+                            border-white/20
 
-                                overflow-hidden
+                            overflow-y-auto
+                            max-h-72
 
-                                z-50
-                            "
+                            z-50
+                        "
                     >
-                        {suggestions.map((product) => (
+                        {suggestions.map((product, index) => (
                             <div
                                 key={product.id}
-                                onClick={() => onSelectProduct(product)}
-                                className="
-                                                px-4
-                                                py-3
+                                onClick={() => {
+                                    onSelectProduct(product);
 
-                                                text-white
+                                    setActiveIndex(-1);
+                                }}
+                                className={`
+                                        px-4
+                                        py-3
 
-                                                cursor-pointer
+                                        cursor-pointer
 
-                                                hover:bg-white/10
-                                            "
+                                        ${
+                                            activeIndex === index
+                                                ? "bg-white"
+                                                : "hover:bg-white/10"
+                                        }
+                                    `}
                             >
-                                <div>{product.productName}</div>
-
                                 <div
                                     className="
-                                                    text-xs
-                                                    text-gray-300
-                                                "
+                                            flex
+                                            justify-between
+                                            items-center
+                                        "
                                 >
-                                    ₹{product.sellingPrice}
+                                    <span
+                                        className={
+                                            activeIndex === index
+                                                ? "text-[#2347D9] font-semibold"
+                                                : "text-white"
+                                        }
+                                    >
+                                        {product.productName}
+                                    </span>
+
+                                    <span
+                                        className={
+                                            activeIndex === index
+                                                ? "text-[#2347D9] font-semibold"
+                                                : "text-white"
+                                        }
+                                    >
+                                        ₹{product.sellingPrice}
+                                    </span>
                                 </div>
                             </div>
                         ))}
