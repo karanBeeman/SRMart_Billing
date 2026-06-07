@@ -1,9 +1,9 @@
 package com.sr.mart.software.service;
 
 import com.sr.mart.software.dto.CreateInvoiceRequest;
-import com.sr.mart.software.model.InvoiceResponse;
+import com.sr.mart.software.model.CreateInvoiceResponse;
 
 public interface InvoiceService {
 
-    InvoiceResponse createInvoice(CreateInvoiceRequest request);
+    CreateInvoiceResponse createInvoice(CreateInvoiceRequest request, String idempotencyKey);
 }

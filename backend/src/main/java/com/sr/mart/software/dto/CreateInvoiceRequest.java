@@ -2,7 +2,6 @@ package com.sr.mart.software.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
 
 public record CreateInvoiceRequest(
@@ -11,10 +10,10 @@ public record CreateInvoiceRequest(
 
         BigDecimal gstAmount,
 
-        @NotNull
+        @NotNull(message = "totalAmount is required")
         BigDecimal totalAmount,
 
-        @NotBlank
+        @NotBlank(message = "status is required")
         String status
 ) {
 }

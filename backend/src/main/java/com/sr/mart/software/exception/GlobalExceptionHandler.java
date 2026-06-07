@@ -25,9 +25,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
-                        errorMessage,
-                        HttpStatus.BAD_REQUEST.value(),
-                        LocalDateTime.now()
+                                errorMessage,
+                                HttpStatus.BAD_REQUEST.value(),
+                                LocalDateTime.now()
                         )
                 );
     }
@@ -36,38 +36,38 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
 
         return ResponseEntity
-            .status(HttpStatus.CONFLICT)
-            .body(new ErrorResponse(
-                        ex.getMessage(),
-                        HttpStatus.CONFLICT.value(),
-                        LocalDateTime.now()
-                    )
-            );
+                .status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.CONFLICT.value(),
+                                LocalDateTime.now()
+                        )
+                );
     }
 
     @ExceptionHandler(RoleNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRoleNotFoundException(RoleNotFoundException ex) {
 
         return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .body(new ErrorResponse(
-                            ex.getMessage(),
-                            HttpStatus.NOT_FOUND.value(),
-                            LocalDateTime.now()
-                    )
-            );
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.NOT_FOUND.value(),
+                                LocalDateTime.now()
+                        )
+                );
     }
 
     @ExceptionHandler(RoleAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> roleAlreadyExistsExceptionHandler(RoleAlreadyExistsException ex) {
         return ResponseEntity
-            .status(HttpStatus.CONFLICT)
-            .body(new ErrorResponse(
-                            ex.getMessage(),
-                            HttpStatus.NOT_FOUND.value(),
-                            LocalDateTime.now()
-                    )
-            );
+                .status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.NOT_FOUND.value(),
+                                LocalDateTime.now()
+                        )
+                );
     }
 
     @ExceptionHandler(InvalidPasswordException.class)
@@ -98,25 +98,49 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
 
         return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(new ErrorResponse(
-                            ex.getMessage(),
-                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                            LocalDateTime.now()
-                    )
-            );
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                                LocalDateTime.now()
+                        )
+                );
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorResponse> productNotFoundExcpectionHandler(Exception ex) {
 
         return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .body(new ErrorResponse(
-                            ex.getMessage(),
-                            HttpStatus.NOT_FOUND.value(),
-                            LocalDateTime.now()
-                    )
-            );
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.NOT_FOUND.value(),
+                                LocalDateTime.now()
+                        )
+                );
+    }
+
+    @ExceptionHandler(InvoiceAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> invoiceAlreadyExistsExceptionHandler(InvoiceAlreadyExistsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.CONFLICT.value(),
+                                LocalDateTime.now()
+                        )
+                );
+    }
+
+    @ExceptionHandler(InvalidInvoiceException.class)
+    public ResponseEntity<ErrorResponse> invalidInvoiceExceptionHandler(InvalidInvoiceException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.BAD_REQUEST.value(),
+                                LocalDateTime.now()
+                        )
+                );
     }
 }

@@ -2,12 +2,14 @@ package com.sr.mart.software.service.impl;
 
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.entity.Invoice;
-import com.sr.mart.software.model.InvoiceResponse;
+import com.sr.mart.software.exception.InvalidInvoiceException;
+import com.sr.mart.software.exception.InvoiceAlreadyExistsException;
+import com.sr.mart.software.model.CreateInvoiceResponse;
 import com.sr.mart.software.repository.InvoiceRepository;
-import java.math.BigDecimal;
-
 import com.sr.mart.software.service.InvoiceService;
+import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,53 +19,70 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
 
-    public String getNextInvoiceNumber() {
-        return invoiceRepository.findTopByOrderByIdDesc()
-                .map(Invoice::getInvoiceNumber)
-                .map(this::incrementInvoiceNumber)
-                .orElse("INV-0001");
+    @Override
+    @Transactional
+    public CreateInvoiceResponse createInvoice(CreateInvoiceRequest invoiceRequest, String idempotencyKey) {
+        if (idempotencyKey == null || idempotencyKey.isBlank()) {
+            throw new InvalidInvoiceException("Idempotency key is required");
+        }
+
+        var existingInvoice = invoiceRepository.findByIdempotencyKey(idempotencyKey);
+        if (existingInvoice.isPresent()) {
+            return CreateInvoiceResponse.from(existingInvoice.get());
+        }
+
+        Invoice invoice = buildInvoice(invoiceRequest, idempotencyKey);
+
+        try {
+            invoice.setInvoiceNumber(generateNextInvoiceNumber());
+            Invoice createdInvoice = invoiceRepository.save(invoice);
+            return CreateInvoiceResponse.from(createdInvoice);
+        } catch (DataIntegrityViolationException e) {
+            return invoiceRepository.findByIdempotencyKey(idempotencyKey)
+                    .map(CreateInvoiceResponse::from)
+                    .orElseThrow(() -> new InvoiceAlreadyExistsException("Invoice with the same idempotency key already exists", e));
+        }
     }
 
-    @Override @Transactional
-    public InvoiceResponse createInvoice(CreateInvoiceRequest request) {
+    private String generateNextInvoiceNumber() {
+        Long nextSequenceValue = invoiceRepository.getNextInvoiceSequence();
+        return String.format("INV%06d", nextSequenceValue);
+    }
+
+    private Invoice buildInvoice(CreateInvoiceRequest invoiceRequest, String idempotencyKey) {
         Invoice invoice = new Invoice();
+        invoice.setIdempotencyKey(idempotencyKey);
 
-        invoice.setInvoiceNumber(getNextInvoiceNumber());
-
-        BigDecimal subtotal = request.subtotal() != null ? request.subtotal() : BigDecimal.ZERO;
-        BigDecimal gstAmount = request.gstAmount() != null ? request.gstAmount() : BigDecimal.ZERO;
+        BigDecimal subtotal = invoiceRequest.subtotal() != null ? invoiceRequest.subtotal() : BigDecimal.ZERO;
+        if (subtotal.signum() < 0) {
+            throw new InvalidInvoiceException("Subtotal cannot be negative");
+        }
         invoice.setSubtotal(subtotal);
+
+        BigDecimal gstAmount = invoiceRequest.gstAmount() != null ? invoiceRequest.gstAmount() : BigDecimal.ZERO;
+        if (gstAmount.signum() < 0) {
+            throw new InvalidInvoiceException("GST amount cannot be negative");
+        }
         invoice.setGstAmount(gstAmount);
 
-        BigDecimal totalAmount = request.totalAmount() != null ? request.totalAmount()
-                : subtotal.add(gstAmount);
+        BigDecimal totalAmount = invoiceRequest.totalAmount() != null ? invoiceRequest.totalAmount() : subtotal.add(gstAmount);
+        if (totalAmount.signum() < 0) {
+            throw new InvalidInvoiceException("Total amount cannot be negative");
+        }
         invoice.setTotalAmount(totalAmount);
 
-        String status = request.status();
-        if (status == null || status.isBlank()) {
-            status = "CREATED";
+        String status = (invoiceRequest.status() == null || invoiceRequest.status().isBlank()) ? "CREATED" : invoiceRequest.status();
+        if (!isValidStatus(status)) {
+            throw new InvalidInvoiceException("Invalid status: " + status);
         }
         invoice.setStatus(status);
-
-        Invoice createdInvoice = invoiceRepository.save(invoice);
-        return InvoiceResponse.from(createdInvoice);
+        return invoice;
     }
 
-    private String incrementInvoiceNumber(String currentNumber) {
-        if (currentNumber == null || currentNumber.isBlank()) {
-            return "INV-0001";
-        }
-
-        String prefix = currentNumber.replaceAll("\\d", "");
-        String numericPart = currentNumber.replaceAll("\\D", "");
-
-        if (numericPart.isEmpty()) {
-            return prefix + "0001";
-        }
-
-        int next = Integer.parseInt(numericPart) +1;
-        String formattedNumber = String.format("%0" + numericPart.length() + "d", next);
-        return prefix + formattedNumber;
+    private boolean isValidStatus(String status) {
+        return status.equalsIgnoreCase("CREATED")
+                || status.equalsIgnoreCase("BILLED")
+                || status.equalsIgnoreCase("CASHED")
+                || status.equalsIgnoreCase("CANCELLED");
     }
 }
-
