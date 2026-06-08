@@ -109,8 +109,6 @@ export default function useSalesProducts(inputRef) {
             setSuggestions([]);
             setActiveIndex(-1);
         } catch (error) {
-            console.log("error", error);
-            console.log("error.response", error?.response);
             toast.error(error?.response?.data?.message || "Product not found");
             setSearchValue("");
             setSuggestions([]);

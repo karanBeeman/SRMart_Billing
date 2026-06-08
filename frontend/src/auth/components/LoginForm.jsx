@@ -1,52 +1,9 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import useLogin from "../../hooks/useLogin.js";
 
 import { User, Lock, ShoppingCart } from "lucide-react";
 
 function LoginForm() {
-    const navigate = useNavigate();
-
-    const { login } = useAuth();
-
-    const [formData, setFormData] = useState({
-        username: "",
-        password: "",
-    });
-
-    const [loading, setLoading] = useState(false);
-
-    const [error, setError] = useState("");
-
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        setError("");
-
-        try {
-            setLoading(true);
-
-            await login(formData);
-
-            navigate("/sales");
-            setLoading(false);
-        } catch (err) {
-            setError(err.message);
-            setFormData({
-                username: "",
-                password: "",
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { formData, loading, error, handleChange, handleSubmit } = useLogin();
 
     return (
         <div
