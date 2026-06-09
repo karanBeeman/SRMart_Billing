@@ -115,9 +115,7 @@ function ProductScanner({
                             onLookup();
                         }
                     }}
-                    placeholder="
-                        Scan barcode / Product ID / Product Name
-                    "
+                    placeholder="Scan barcode / Product ID / Product Name"
                     className="
                         w-full
                         pl-12
