@@ -1,4 +1,23 @@
-function SalesHeader({ user, invoiceNumber, invoiceDate }) {
+function SalesHeader({ user, invoiceNumber, invoiceDate, status }) {
+    const getStatusStyle = (status) => {
+        switch (status) {
+            case "DRAFT":
+                return "bg-yellow-500/20 text-yellow-300";
+
+            case "HELD":
+                return "bg-orange-500/20 text-orange-300";
+
+            case "COMPLETED":
+                return "bg-green-500/20 text-green-300";
+
+            case "CANCELLED":
+                return "bg-red-500/20 text-red-300";
+
+            default:
+                return "bg-gray-500/20 text-gray-300";
+        }
+    };
+
     return (
         <div className="mb-8">
             <div
@@ -32,89 +51,49 @@ function SalesHeader({ user, invoiceNumber, invoiceDate }) {
 
                 <div
                     className="
-                        min-w-[280px]
-                        rounded-xl
-                        border
-                        border-white/20
-                        bg-white/10
-                        px-6
-                        py-4
-                        backdrop-blur-md
-                    "
+        min-w-[320px]
+        rounded-xl
+        border
+        border-white/20
+        bg-white/10
+        px-6
+        py-4
+        backdrop-blur-md
+    "
                 >
-                    <div
-                        className="
-                            mb-2
-                            flex
-                            justify-between
-                        "
-                    >
-                        <span
-                            className="
-                                text-sm
-                                text-gray-300
-                            "
-                        >
-                            Cashier
-                        </span>
+                    <div className="grid grid-cols-[90px_1fr] gap-y-3">
+                        <span className="text-sm text-gray-300">Cashier</span>
 
-                        <span
-                            className="
-                                text-sm
-                                text-white
-                            "
-                        >
+                        <span className="text-sm text-white">
                             {user?.username}
                         </span>
-                    </div>
 
-                    <div
-                        className="
-                            mb-2
-                            flex
-                            justify-between
-                        "
-                    >
-                        <span
-                            className="
-                                text-sm
-                                text-gray-300
-                            "
-                        >
-                            Bill No
-                        </span>
+                        <span className="text-sm text-gray-300">Bill No</span>
 
-                        <span
-                            className="
-                                font-semibold
-                                text-white
-                            "
-                        >
+                        <span className="text-lg font-bold text-white">
                             {invoiceNumber}
                         </span>
-                    </div>
 
-                    <div
-                        className="
-                            flex
-                            justify-between
-                        "
-                    >
+                        <span className="text-sm text-gray-300">Status</span>
+
                         <span
-                            className="
-                                text-sm
-                                text-gray-300
-                            "
+                            className={`
+                w-fit
+                rounded-full
+                bg-yellow-500/20
+                px-3
+                py-1
+                text-xs
+                font-semibold
+                 ${getStatusStyle(status)}
+            `}
                         >
-                            Date
+                            {status}
                         </span>
 
-                        <span
-                            className="
-                                text-sm
-                                text-white
-                            "
-                        >
+                        <span className="text-sm text-gray-300">Date</span>
+
+                        <span className="text-sm text-white">
                             {invoiceDate}
                         </span>
                     </div>

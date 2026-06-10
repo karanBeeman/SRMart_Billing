@@ -1,13 +1,16 @@
 package com.sr.mart.software.service.impl;
 
 import com.sr.mart.software.dto.CreateInvoiceRequest;
+import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.entity.Invoice;
+import com.sr.mart.software.enums.InvoiceStatus;
 import com.sr.mart.software.exception.InvalidInvoiceException;
 import com.sr.mart.software.exception.InvoiceAlreadyExistsException;
 import com.sr.mart.software.model.CreateInvoiceResponse;
 import com.sr.mart.software.repository.InvoiceRepository;
 import com.sr.mart.software.service.InvoiceService;
 import java.math.BigDecimal;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -21,26 +24,50 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional
-    public CreateInvoiceResponse createInvoice(CreateInvoiceRequest invoiceRequest, String idempotencyKey) {
-        if (idempotencyKey == null || idempotencyKey.isBlank()) {
-            throw new InvalidInvoiceException("Idempotency key is required");
+    public CreateInvoiceResponse createDraftInvoice(
+        DraftInvoiceRequest request
+    ) {
+
+        Optional<Invoice> existingDraft =
+            invoiceRepository.findByStatusAndCreatedBy(
+                InvoiceStatus.DRAFT.name(),
+                request.createdBy()
+            );
+
+        if (existingDraft.isPresent()) {
+            return CreateInvoiceResponse.from(
+                existingDraft.get()
+            );
         }
 
-        var existingInvoice = invoiceRepository.findByIdempotencyKey(idempotencyKey);
-        if (existingInvoice.isPresent()) {
-            return CreateInvoiceResponse.from(existingInvoice.get());
-        }
+        Invoice invoice = Invoice.builder()
+            .createdBy(request.createdBy())
+            .status(InvoiceStatus.DRAFT.name())
+            .build();
 
-        Invoice invoice = buildInvoice(invoiceRequest, idempotencyKey);
+        invoice = invoiceRepository.save(invoice);
+
+        invoice.setInvoiceNumber(
+            String.format("INV%06d", invoice.getId())
+        );
+
+        invoice = invoiceRepository.save(invoice);
+
+        return CreateInvoiceResponse.from(invoice);
+    }
+
+    @Override
+    @Transactional
+    public CreateInvoiceResponse createInvoice(CreateInvoiceRequest invoiceRequest) {
+
+        Invoice invoice = buildInvoice(invoiceRequest);
 
         try {
             invoice.setInvoiceNumber(generateNextInvoiceNumber());
             Invoice createdInvoice = invoiceRepository.save(invoice);
             return CreateInvoiceResponse.from(createdInvoice);
         } catch (DataIntegrityViolationException e) {
-            return invoiceRepository.findByIdempotencyKey(idempotencyKey)
-                    .map(CreateInvoiceResponse::from)
-                    .orElseThrow(() -> new InvoiceAlreadyExistsException("Invoice with the same idempotency key already exists", e));
+            throw new InvoiceAlreadyExistsException("Invoice with the same idempotency key already exists", e);
         }
     }
 
@@ -49,9 +76,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         return String.format("INV%06d", nextSequenceValue);
     }
 
-    private Invoice buildInvoice(CreateInvoiceRequest invoiceRequest, String idempotencyKey) {
+    private Invoice buildInvoice(CreateInvoiceRequest invoiceRequest) {
         Invoice invoice = new Invoice();
-        invoice.setIdempotencyKey(idempotencyKey);
 
         BigDecimal subtotal = invoiceRequest.subtotal() != null ? invoiceRequest.subtotal() : BigDecimal.ZERO;
         if (subtotal.signum() < 0) {

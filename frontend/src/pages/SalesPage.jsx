@@ -11,19 +11,18 @@ import SalesHeader from "../components/sales/SalesHeader.jsx";
 
 import useSalesProducts from "../hooks/useSalesProducts.js";
 import useInvoiceSummary from "../hooks/useInvoiceSummary.js";
+import useInvoice from "../hooks/useInvoice.js";
 
 function SalesPage() {
     const inputRef = useRef(null);
 
+    const { user } = useAuth();
+
+    const { invoice, loading } = useInvoice(user);
+
     useEffect(() => {
         inputRef.current?.focus();
     }, []);
-
-    const { user } = useAuth();
-
-    const [invoiceNumber] = useState(`INV-${Date.now()}`);
-
-    const invoiceDate = new Date().toLocaleString();
 
     const [customer, setCustomer] = useState({
         id: null,
@@ -53,12 +52,31 @@ function SalesPage() {
 
     const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
 
+    if (loading) {
+        return (
+            <DashboardContainer>
+                <div className="text-center text-white">Loading invoice...</div>
+            </DashboardContainer>
+        );
+    }
+
     return (
         <DashboardContainer>
             <SalesHeader
                 user={user}
-                invoiceNumber={invoiceNumber}
-                invoiceDate={invoiceDate}
+                invoiceNumber={invoice?.invoiceNumber}
+                invoiceDate={
+                    invoice?.createdAt
+                        ? new Date(invoice.createdAt).toLocaleString("en-IN", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                          })
+                        : ""
+                }
+                status={invoice?.status}
             />
 
             <ProductScanner

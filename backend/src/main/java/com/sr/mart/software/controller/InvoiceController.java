@@ -1,6 +1,7 @@
 package com.sr.mart.software.controller;
 
 import com.sr.mart.software.dto.CreateInvoiceRequest;
+import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.model.CreateInvoiceResponse;
 import com.sr.mart.software.service.InvoiceService;
 import jakarta.validation.Valid;
@@ -18,12 +19,19 @@ public class InvoiceController {
 
     private final InvoiceService invoiceService;
 
+    @PostMapping("/create/draft/invoices")
+    public ResponseEntity<CreateInvoiceResponse> createDraftInvoice(
+        @Valid @RequestBody DraftInvoiceRequest invoiceRequest
+    ) {
+        CreateInvoiceResponse res = invoiceService.createDraftInvoice(invoiceRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(res);
+    }
+
     @PostMapping("/create/invoices")
     public ResponseEntity<CreateInvoiceResponse> createInvoice(
-            @RequestHeader(value = "idempotency-key") String idempotencyKey,
-            @Valid @RequestBody CreateInvoiceRequest invoiceRequest
+        @Valid @RequestBody CreateInvoiceRequest invoiceRequest
     ) {
-        CreateInvoiceResponse res = invoiceService.createInvoice(invoiceRequest, idempotencyKey);
+        CreateInvoiceResponse res = invoiceService.createInvoice(invoiceRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 }

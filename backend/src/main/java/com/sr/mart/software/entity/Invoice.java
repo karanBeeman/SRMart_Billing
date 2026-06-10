@@ -6,8 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,26 +28,22 @@ public class Invoice extends BaseEntity {
 
     @Column(
             name = "invoice_number",
-            nullable = false,
             unique = true
     )
     private String invoiceNumber;
-
-    @Column(
-            name = "idempotency_key",
-            nullable = false,
-            unique = true
-    )
-    private String idempotencyKey;
 
     private BigDecimal subtotal;
 
     private BigDecimal gstAmount;
 
-    @NotNull
+    private BigDecimal discountAmount;
+
+    private String createdBy;
+
+    private String updatedBy;
+
     private BigDecimal totalAmount;
 
-    @NotBlank
     private String status;
 
 }

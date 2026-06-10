@@ -8,7 +8,11 @@ public record CreateInvoiceResponse(
         BigDecimal subtotal,
          BigDecimal gstAmount,
         BigDecimal totalAmount,
-        String status
+        String status,
+        String CreatedBy,
+        String updatedBy,
+        String createdAt,
+        String updatedAt
 ) {
     public static CreateInvoiceResponse from(Invoice createdInvoice) {
         return new CreateInvoiceResponse(
@@ -16,7 +20,11 @@ public record CreateInvoiceResponse(
                 createdInvoice.getSubtotal(),
                 createdInvoice.getGstAmount(),
                 createdInvoice.getTotalAmount(),
-                createdInvoice.getStatus()
+                createdInvoice.getStatus(),
+                createdInvoice.getCreatedBy(),
+                createdInvoice.getUpdatedBy(),
+                createdInvoice.getCreatedAt().toString(),
+                createdInvoice.getUpdatedAt().toString()
         );
     }
 }
