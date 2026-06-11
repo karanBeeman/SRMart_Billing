@@ -21,8 +21,10 @@ function SalesPage() {
     const { invoice, loading } = useInvoice(user);
 
     useEffect(() => {
-        inputRef.current?.focus();
-    }, []);
+        if (!loading && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [loading]);
 
     const [customer, setCustomer] = useState({
         id: null,
