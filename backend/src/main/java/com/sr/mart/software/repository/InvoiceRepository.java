@@ -1,6 +1,7 @@
 package com.sr.mart.software.repository;
 
 import com.sr.mart.software.entity.Invoice;
+import com.sr.mart.software.enums.InvoiceStatus;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,5 +13,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query(value = "SELECT nextval('invoice_seq')", nativeQuery = true)
     Long getNextInvoiceSequence();
 
-    Optional<Invoice> findByStatusAndCreatedBy(String name, String by);
+    Optional<Invoice> findByStatusAndCreatedBy(InvoiceStatus name, String by);
 }

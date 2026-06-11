@@ -1,7 +1,10 @@
 package com.sr.mart.software.entity;
 
+import com.sr.mart.software.enums.InvoiceStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -44,6 +47,7 @@ public class Invoice extends BaseEntity {
 
     private BigDecimal totalAmount;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private InvoiceStatus status;
 
 }

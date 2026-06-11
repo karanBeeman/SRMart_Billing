@@ -1,14 +1,15 @@
 package com.sr.mart.software.model;
 
 import com.sr.mart.software.entity.Invoice;
+import com.sr.mart.software.enums.InvoiceStatus;
 import java.math.BigDecimal;
 
 public record CreateInvoiceResponse(
         String invoiceNumber,
         BigDecimal subtotal,
-         BigDecimal gstAmount,
+        BigDecimal gstAmount,
         BigDecimal totalAmount,
-        String status,
+        InvoiceStatus status,
         String CreatedBy,
         String updatedBy,
         String createdAt,

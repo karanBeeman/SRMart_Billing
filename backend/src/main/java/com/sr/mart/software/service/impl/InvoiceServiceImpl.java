@@ -30,7 +30,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Optional<Invoice> existingDraft =
             invoiceRepository.findByStatusAndCreatedBy(
-                InvoiceStatus.DRAFT.name(),
+                InvoiceStatus.DRAFT,
                 request.createdBy()
             );
 
@@ -42,7 +42,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Invoice invoice = Invoice.builder()
             .createdBy(request.createdBy())
-            .status(InvoiceStatus.DRAFT.name())
+            .status(InvoiceStatus.DRAFT)
             .build();
 
         invoice = invoiceRepository.save(invoice);
@@ -101,7 +101,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (!isValidStatus(status)) {
             throw new InvalidInvoiceException("Invalid status: " + status);
         }
-        invoice.setStatus(status);
+        invoice.setStatus(InvoiceStatus.DRAFT);
         return invoice;
     }
 
