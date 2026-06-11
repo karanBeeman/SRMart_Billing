@@ -6,6 +6,15 @@ const invoiceService = {
 
         return response.data;
     },
+
+    async holdInvoice(invoiceNumber, request) {
+        const response = await invoiceApi.holdInvoice(
+            invoiceNumber,
+            request
+        );
+
+        return response.data;
+    }
 };
 
 export default invoiceService;

@@ -8,6 +8,7 @@ import ProductTable from "../components/sales/ProductTable.jsx";
 import CustomerSection from "../components/customers/CustomerSection.jsx";
 import InvoiceSummary from "../components/sales/InvoiceSummary.jsx";
 import SalesHeader from "../components/sales/SalesHeader.jsx";
+import useInvoiceActions from "../hooks/useInvoiceActions";
 
 import useSalesProducts from "../hooks/useSalesProducts.js";
 import useInvoiceSummary from "../hooks/useInvoiceSummary.js";
@@ -19,6 +20,8 @@ function SalesPage() {
     const { user } = useAuth();
 
     const { invoice, loading } = useInvoice(user);
+
+    const { holdBill } = useInvoiceActions();
 
     useEffect(() => {
         if (!loading && inputRef.current) {
@@ -100,7 +103,12 @@ function SalesPage() {
                 removeProduct={removeProduct}
             />
 
-            <InvoiceSummary subtotal={subtotal} gst={gst} total={total} />
+            <InvoiceSummary
+                subtotal={subtotal}
+                gst={gst}
+                total={total}
+                onHoldBill={() => holdBill(invoice?.invoiceNumber, user)}
+            />
 
             <CustomerSection
                 customer={customer}

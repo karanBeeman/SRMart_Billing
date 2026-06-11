@@ -1,6 +1,12 @@
-import { Save, Printer, Eye } from "lucide-react";
+import { Save, Printer, Eye, Archive } from "lucide-react";
 
-function InvoiceSummary({ subtotal, gst, points, total }) {
+function InvoiceSummary({
+    subtotal,
+    gst,
+    points,
+    total,
+    onHoldBill,
+}) {
     return (
         <div
             className="
@@ -69,8 +75,27 @@ function InvoiceSummary({ subtotal, gst, points, total }) {
                 "
             >
                 <button
+                    onClick={onHoldBill}
+                    className="
+                bg-orange-500
+                hover:bg-orange-600
+                text-white
+                px-6
+                py-3
+                rounded-xl
+                flex
+                items-center
+                gap-2
+                "
+                >
+                    <Archive size={18} />
+                    Hold Bill
+                </button>
+
+                <button
                     className="
                         bg-white
+                        hover:bg-amber-200
                         text-[#2347D9]
                         px-6
                         py-3
@@ -87,6 +112,7 @@ function InvoiceSummary({ subtotal, gst, points, total }) {
                 <button
                     className="
                         bg-yellow-500
+                        hover:bg-yellow-600
                         text-white
                         px-6
                         py-3
@@ -103,6 +129,7 @@ function InvoiceSummary({ subtotal, gst, points, total }) {
                 <button
                     className="
                         bg-green-500
+                        hover:bg-green-600
                         text-white
                         px-6
                         py-3
