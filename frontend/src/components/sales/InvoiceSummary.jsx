@@ -4,13 +4,15 @@ function InvoiceSummary({ subtotal, gst, points, total, onHoldBill }) {
     return (
         <div
             className="
-                bg-white/10
-                backdrop-blur-lg
+
+            bg-slate-900/40
+border-blue-500/20
+backdrop-blur-xl
                 border
-                border-white/20
+
                 rounded-2xl
                 p-6
-                mb-6
+
             "
         >
             <div className="space-y-3">

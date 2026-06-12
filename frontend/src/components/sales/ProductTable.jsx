@@ -13,13 +13,14 @@ function ProductTable({
     return (
         <div
             className="
-                bg-white/10
-                backdrop-blur-lg
+
+                bg-slate-900/40
+border-blue-500/20
+backdrop-blur-xl
                 border
-                border-white/20
+
                 rounded-2xl
                 p-6
-                mb-6
             "
         >
             <table className="w-full table-fixed">
@@ -61,7 +62,7 @@ function ProductTable({
                                     transition-all
                                     ${
                                         selectedRow === index
-                                            ? "border-l-4 border-cyan-400 pl-4 bg-white/5"
+                                            ? "border-l-4 border-cyan-400 bg-cyan-500/5"
                                             : ""
                                     }
                                 `}
@@ -71,7 +72,7 @@ function ProductTable({
                                         ftext-lg font-semibold text-white
                                         ${
                                             selectedRow === index
-                                                ? "text-cyan-300"
+                                                ? "text-emerald-300"
                                                 : "text-white"
                                         }
                                     `}
@@ -86,7 +87,7 @@ function ProductTable({
                                         mt-1
                                         ${
                                             product.stockQuantity <= 5
-                                                ? "text-red-300"
+                                                ? "text-red-400"
                                                 : "text-green-300"
                                         }
                                     `}

@@ -11,11 +11,11 @@ function LoginInput({
             <Icon
                 size={20}
                 className="
-                    absolute
-                    left-4
-                    top-1/2
-                    -translate-y-1/2
-                    text-white
+                      absolute
+    left-4
+    top-1/2
+    -translate-y-1/2
+    text-cyan-300
                 "
             />
 
@@ -29,19 +29,28 @@ function LoginInput({
                 autoComplete="off"
                 className="
                     w-full
-                    h-14
-                    pl-12
-                    pr-4
-                    rounded-xl
-                    bg-white/10
-                    border
-                    border-white/30
-                    text-white
-                    placeholder:text-gray-200
-                    outline-none
-                    focus:border-white
-                    focus:bg-white/15
-                    transition-all
+    h-14
+
+    pl-12
+    pr-4
+
+    rounded-xl
+
+    bg-slate-900/50
+
+    border
+    border-blue-500/20
+
+    text-white
+    placeholder:text-slate-400
+
+    outline-none
+
+    focus:border-cyan-400
+    focus:ring-2
+    focus:ring-cyan-500/20
+
+    transition-all
                 "
             />
         </div>

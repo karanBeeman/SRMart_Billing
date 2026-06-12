@@ -12,18 +12,24 @@ function LoginForm() {
     return (
         <div
             className="
-                w-full
-                max-w-md
-                mx-auto
-                bg-white/8
-                 backdrop-blur-xl
-                border
-                border-white/20
-                rounded-3xl
-                px-8
-                py-10
-                shadow-2xl
-    shadow-black/30
+
+            w-full
+            max-w-md
+            mx-auto
+
+            bg-slate-900/40
+    backdrop-blur-2xl
+
+    border
+    border-blue-500/20
+
+    rounded-3xl
+
+    px-8
+    py-10
+
+    shadow-[0_0_50px_rgba(59,130,246,0.25)]
+
             "
         >
             <LoginLogo />
@@ -53,16 +59,23 @@ function LoginForm() {
                     disabled={loading}
                     className="
                         h-14
-                        bg-white
-                        text-[#2347D9]
-                        rounded-xl
-                        font-semibold
-                        text-lg
-                        shadow-lg
-                        hover:bg-gray-100
-                        active:scale-[0.98]
-                        transition-all
-                        duration-200
+
+    rounded-xl
+
+    bg-gradient-to-r
+    from-blue-600
+    to-cyan-500
+
+    text-white
+    font-semibold
+    text-lg
+
+    shadow-[0_0_20px_rgba(59,130,246,0.5)]
+
+    hover:scale-[1.01]
+    hover:brightness-110
+
+    transition-all
                     "
                 >
                     {loading ? "LOGGING IN..." : "LOGIN"}
@@ -71,10 +84,12 @@ function LoginForm() {
                 <button
                     type="button"
                     className="
-                        text-white
-                        text-sm
-                        mt-2
-                        hover:underline
+                       text-slate-300
+    text-sm
+    mt-2
+
+    hover:text-cyan-300
+    transition-colors
                     "
                 >
                     Forgot password?

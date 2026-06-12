@@ -28,7 +28,7 @@ function SalesHeader({ user, invoiceNumber, invoiceDate, status }) {
                     gap-6
                 "
             >
-                <div>
+                <div className="pt-4">
                     <h1
                         className="
                             text-4xl
@@ -54,11 +54,13 @@ function SalesHeader({ user, invoiceNumber, invoiceDate, status }) {
         min-w-[320px]
         rounded-xl
         border
-        border-white/20
-        bg-white/10
+
+        bg-slate-900/40
+border-blue-500/20
+backdrop-blur-xl
         px-6
         py-4
-        backdrop-blur-md
+
     "
                 >
                     <div className="grid grid-cols-[90px_1fr] gap-y-3">

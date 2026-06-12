@@ -1,76 +1,73 @@
 import {
-    Package,
     ShoppingCart,
     Users,
     Receipt,
     BarChart3,
-    Warehouse,
-    Boxes,
-    CreditCard,
-    BadgePercent,
-    ClipboardList,
-    TrendingUp,
+    Wallet,
+    Truck,
 } from "lucide-react";
 
 function BackgroundIcons() {
-    const iconStyle = "absolute text-white/10";
-
     return (
         <>
-            {/* LEFT SIDE */}
-            <Package
-                size={120}
-                className={`${iconStyle} top-20 left-20 rotate-12`}
+            <Wallet
+                size={140}
+                className="
+        absolute
+        top-[10%]
+        left-[15%]
+        text-cyan-400/10
+    "
             />
 
             <ShoppingCart
-                size={140}
-                className={`${iconStyle} bottom-24 left-20 -rotate-6`}
-            />
-
-            <Boxes
-                size={110}
-                className={`${iconStyle} top-1/2 left-1/4 rotate-12`}
-            />
-
-            <CreditCard
-                size={110}
-                className={`${iconStyle} bottom-20 left-[30%] -rotate-12`}
-            />
-
-            {/* TOP CENTER */}
-            <Warehouse
-                size={120}
-                className={`${iconStyle} top-16 left-1/2 -translate-x-1/2`}
-            />
-
-            {/* RIGHT SIDE */}
-            <Users size={120} className={`${iconStyle} top-32 right-24`} />
-
-            <TrendingUp
-                size={120}
-                className={`${iconStyle} top-[35%] right-[22%]`}
+                size={150}
+                className="
+        absolute
+        top-[42%]
+        left-[8%]
+        text-cyan-400/10
+    "
             />
 
             <BarChart3
                 size={130}
-                className={`${iconStyle} top-[55%] right-[25%]`}
+                className="
+        absolute
+        bottom-[12%]
+        left-[18%]
+        text-cyan-400/10
+    "
             />
 
-            <ClipboardList
-                size={120}
-                className={`${iconStyle} bottom-20 right-16`}
+            <Users
+                size={140}
+                className="
+        absolute
+        top-[10%]
+        right-[15%]
+        text-cyan-400/10
+    "
+            />
+
+            <Truck
+                size={130}
+                className="
+        absolute
+        top-[42%]
+        right-[10%]
+        text-cyan-400/10
+    "
             />
 
             <Receipt
                 size={130}
-                className={`${iconStyle} bottom-16 right-[22%]`}
-            />
-
-            {/* BOTTOM CENTER */}
-            <BadgePercent
-                size={110}
-                className={`${iconStyle} bottom-12 left-1/2 -translate-x-1/2`}
+                className="
+        bottom-[12%]
+        right-[15%]
+        absolute
+        text-cyan-400/10
+    "
             />
         </>
     );

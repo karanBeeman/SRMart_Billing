@@ -38,16 +38,16 @@ function ProductScanner({
                 relative
                 z-50
 
-                bg-white/10
-                backdrop-blur-lg
 
                 border
-                border-white/20
+                bg-slate-900/40
+border-blue-500/20
+backdrop-blur-xl
 
                 rounded-2xl
 
                 p-6
-                mb-6
+
             "
         >
             <h2

@@ -5,8 +5,6 @@ import { useAuth } from "../auth/hooks/useAuth.js";
 function TopNavbar() {
     const { user } = useAuth();
 
-    console.log("user in top navbar:", user);
-
     const firstLetter =
         user?.username
 
@@ -85,7 +83,7 @@ function TopNavbar() {
 
             rounded-xl
 
-            bg-white/15
+            bg-amber-300/50
             backdrop-blur-md
 
             border
@@ -93,6 +91,7 @@ function TopNavbar() {
 
             text-white
             text-sm
+            font-bold
 
             opacity-0
             invisible

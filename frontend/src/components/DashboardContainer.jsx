@@ -11,11 +11,16 @@ function DashboardContainer({ children }) {
                 <div
                     className="
                         flex-1
-                        relative
-                        z-10
-                        p-8
-                        overflow-y-auto
-                        h-screen
+    relative
+    z-10
+
+    p-6
+    md:p-8
+
+    overflow-y-auto
+    h-screen
+
+    text-slate-100
                     "
                 >
                     <TopNavbar />
