@@ -17,26 +17,6 @@ import useInvoice from "../hooks/useInvoice.js";
 function SalesPage() {
     const inputRef = useRef(null);
 
-    const { user } = useAuth();
-
-    const { invoice, loading } = useInvoice(user);
-
-    const { holdBill } = useInvoiceActions();
-
-    useEffect(() => {
-        if (!loading && inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [loading]);
-
-    const [customer, setCustomer] = useState({
-        id: null,
-        name: "",
-        phone: "",
-        address: "",
-        availablePoints: 0,
-    });
-
     const {
         searchValue,
         products,
@@ -47,13 +27,63 @@ function SalesPage() {
 
         handleProductSearch,
         handleProductLookup,
-        addProductToBill,
+        selectSuggestedProduct,
 
         updateQty,
         updateSellingPrice,
         removeProduct,
         clearSuggestions,
     } = useSalesProducts(inputRef);
+
+    const { user } = useAuth();
+
+    const { invoice, loading } = useInvoice(user);
+
+    const { holdBill } = useInvoiceActions();
+
+    const [selectedRow, setSelectedRow] = useState(-1);
+
+    useEffect(() => {
+        if (!loading && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [loading]);
+
+    useEffect(() => {
+        if (products.length > 0) {
+            setSelectedRow(products.length - 1);
+        }
+    }, [products.length]);
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.ctrlKey && e.key === "ArrowDown") {
+                e.preventDefault();
+
+                setSelectedRow((prev) =>
+                    Math.min(prev + 1, products.length - 1)
+                );
+            }
+
+            if (e.ctrlKey && e.key === "ArrowUp") {
+                e.preventDefault();
+
+                setSelectedRow((prev) => Math.max(prev - 1, 0));
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [products.length]);
+
+    const [customer, setCustomer] = useState({
+        id: null,
+        name: "",
+        phone: "",
+        address: "",
+        availablePoints: 0,
+    });
 
     const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
 
@@ -91,7 +121,7 @@ function SalesPage() {
                 activeIndex={activeIndex}
                 setActiveIndex={setActiveIndex}
                 suggestions={suggestions}
-                onSelectProduct={addProductToBill}
+                onSelectProduct={selectSuggestedProduct}
                 inputRef={inputRef}
                 clearSuggestions={clearSuggestions}
             />
@@ -101,6 +131,8 @@ function SalesPage() {
                 updateQty={updateQty}
                 updateSellingPrice={updateSellingPrice}
                 removeProduct={removeProduct}
+                selectedRow={selectedRow}
+                setSelectedRow={setSelectedRow}
             />
 
             <InvoiceSummary

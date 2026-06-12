@@ -7,7 +7,7 @@ const invoiceApi = {
 
     holdInvoice(invoiceNumber, request) {
         return apiClient.post(`/hold/invoices/${invoiceNumber}`, request);
-    }
+    },
 };
 
 export default invoiceApi;

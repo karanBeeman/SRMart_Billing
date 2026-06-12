@@ -150,6 +150,18 @@ export default function useSalesProducts(inputRef) {
         );
     };
 
+    const selectSuggestedProduct = async (product, onProductAdded) => {
+        try {
+            const fullProduct = await productService.lookup(product.id);
+
+            addProductToBill(fullProduct);
+
+            onProductAdded?.(fullProduct.id);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return {
         searchValue,
         products,
@@ -159,7 +171,7 @@ export default function useSalesProducts(inputRef) {
 
         handleProductSearch,
         handleProductLookup,
-        addProductToBill,
+        selectSuggestedProduct,
 
         updateQty,
         updateSellingPrice,

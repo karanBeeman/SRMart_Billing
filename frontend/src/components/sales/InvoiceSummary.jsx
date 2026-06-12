@@ -1,12 +1,6 @@
 import { Save, Printer, Eye, Archive } from "lucide-react";
 
-function InvoiceSummary({
-    subtotal,
-    gst,
-    points,
-    total,
-    onHoldBill,
-}) {
+function InvoiceSummary({ subtotal, gst, points, total, onHoldBill }) {
     return (
         <div
             className="
@@ -94,9 +88,9 @@ function InvoiceSummary({
 
                 <button
                     className="
-                        bg-white
-                        hover:bg-amber-200
-                        text-[#2347D9]
+                      bg-yellow-500
+                      hover:bg-yellow-600
+                      text-white
                         px-6
                         py-3
                         rounded-xl
@@ -107,23 +101,6 @@ function InvoiceSummary({
                 >
                     <Save size={18} />
                     Save
-                </button>
-
-                <button
-                    className="
-                        bg-yellow-500
-                        hover:bg-yellow-600
-                        text-white
-                        px-6
-                        py-3
-                        rounded-xl
-                        flex
-                        items-center
-                        gap-2
-                    "
-                >
-                    <Eye size={18} />
-                    Preview
                 </button>
 
                 <button

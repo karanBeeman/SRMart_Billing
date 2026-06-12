@@ -100,7 +100,6 @@ function ProductScanner({
                             suggestions.length > 0
                         ) {
                             e.preventDefault();
-
                             onSelectProduct(suggestions[activeIndex]);
 
                             return;
