@@ -7,6 +7,8 @@ function ProductTable({
     removeProduct,
     selectedRow,
     setSelectedRow,
+    qtyRefs,
+    priceRefs,
 }) {
     return (
         <div
@@ -94,6 +96,7 @@ function ProductTable({
 
                             <td className="text-center">
                                 <input
+                                    ref={(el) => (qtyRefs.current[index] = el)}
                                     type="number"
                                     min="1"
                                     value={product.qty}
@@ -128,6 +131,9 @@ function ProductTable({
 
                             <td className="text-center">
                                 <input
+                                    ref={(el) =>
+                                        (priceRefs.current[index] = el)
+                                    }
                                     type="text"
                                     value={product.sellingPrice}
                                     onChange={(e) =>

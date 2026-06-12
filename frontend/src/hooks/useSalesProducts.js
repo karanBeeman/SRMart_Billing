@@ -145,6 +145,7 @@ export default function useSalesProducts(inputRef) {
     };
 
     const removeProduct = (productId) => {
+        console.log("removing product with id", productId);
         setProducts((previous) =>
             previous.filter((product) => product.id !== productId)
         );

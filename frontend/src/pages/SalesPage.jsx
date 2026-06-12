@@ -9,12 +9,21 @@ import CustomerSection from "../components/customers/CustomerSection.jsx";
 import InvoiceSummary from "../components/sales/InvoiceSummary.jsx";
 import SalesHeader from "../components/sales/SalesHeader.jsx";
 import useInvoiceActions from "../hooks/useInvoiceActions";
+import useProductTableNavigation from "../hooks/useProductTableNavigation.js";
 
 import useSalesProducts from "../hooks/useSalesProducts.js";
 import useInvoiceSummary from "../hooks/useInvoiceSummary.js";
 import useInvoice from "../hooks/useInvoice.js";
 
 function SalesPage() {
+    const EMPTY_CUSTOMER = {
+        id: null,
+        name: "",
+        phone: "",
+        address: "",
+        availablePoints: 0,
+    };
+
     const inputRef = useRef(null);
 
     const {
@@ -35,13 +44,14 @@ function SalesPage() {
         clearSuggestions,
     } = useSalesProducts(inputRef);
 
+    const { selectedRow, setSelectedRow, qtyRefs, priceRefs } =
+        useProductTableNavigation(products, removeProduct);
+
     const { user } = useAuth();
 
     const { invoice, loading } = useInvoice(user);
 
     const { holdBill } = useInvoiceActions();
-
-    const [selectedRow, setSelectedRow] = useState(-1);
 
     useEffect(() => {
         if (!loading && inputRef.current) {
@@ -49,41 +59,7 @@ function SalesPage() {
         }
     }, [loading]);
 
-    useEffect(() => {
-        if (products.length > 0) {
-            setSelectedRow(products.length - 1);
-        }
-    }, [products.length]);
-
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (e.ctrlKey && e.key === "ArrowDown") {
-                e.preventDefault();
-
-                setSelectedRow((prev) =>
-                    Math.min(prev + 1, products.length - 1)
-                );
-            }
-
-            if (e.ctrlKey && e.key === "ArrowUp") {
-                e.preventDefault();
-
-                setSelectedRow((prev) => Math.max(prev - 1, 0));
-            }
-        };
-
-        window.addEventListener("keydown", handleKeyDown);
-
-        return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [products.length]);
-
-    const [customer, setCustomer] = useState({
-        id: null,
-        name: "",
-        phone: "",
-        address: "",
-        availablePoints: 0,
-    });
+    const [customer, setCustomer] = useState({ EMPTY_CUSTOMER });
 
     const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
 
@@ -133,6 +109,8 @@ function SalesPage() {
                 removeProduct={removeProduct}
                 selectedRow={selectedRow}
                 setSelectedRow={setSelectedRow}
+                qtyRefs={qtyRefs}
+                priceRefs={priceRefs}
             />
 
             <InvoiceSummary
