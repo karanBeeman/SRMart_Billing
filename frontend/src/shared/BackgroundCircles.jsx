@@ -1,48 +1,42 @@
 function BackgroundCircles() {
     return (
         <>
-            {/* Top circle */}
             <div
                 className="
                     absolute
                     top-[-300px]
-                    left-[10%]
-                    w-[700px]
-                    h-[700px]
-                    bg-[#3B5AE8]
-                    opacity-20
+                    left-[5%]
+                    w-[800px]
+                    h-[800px]
                     rounded-full
+                    bg-cyan-400/10
+                    blur-3xl
                 "
             />
 
-            {/* Bottom circle */}
             <div
                 className="
                     absolute
                     bottom-[-250px]
-                    left-[-200px]
-                    w-[600px]
-                    h-[600px]
-                    bg-[#3B5AE8]
-                    opacity-20
+                    left-[-150px]
+                    w-[700px]
+                    h-[700px]
                     rounded-full
+                  bg-purple-500/5
+                    blur-3xl
                 "
             />
 
-            {/* Right circle */}
             <div
                 className="
                     absolute
-                    top-[150px]
+                    top-[100px]
                     right-[-250px]
-                    w-[400px]
-                    h-[400px]
-                    md:w-[700px]
-                    md:h-[700px]
-                    bg-[#3B5AE8]
-                    opacity-20
+                    w-[800px]
+                    h-[800px]
                     rounded-full
-                    z-0
+                    bg-pink-500/10
+                    blur-3xl
                 "
             />
         </>

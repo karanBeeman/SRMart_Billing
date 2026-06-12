@@ -15,14 +15,15 @@ function LoginForm() {
                 w-full
                 max-w-md
                 mx-auto
-                bg-white/10
-                backdrop-blur-lg
+                bg-white/8
+                 backdrop-blur-xl
                 border
                 border-white/20
                 rounded-3xl
                 px-8
                 py-10
                 shadow-2xl
+    shadow-black/30
             "
         >
             <LoginLogo />

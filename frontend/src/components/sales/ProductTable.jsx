@@ -68,7 +68,7 @@ function ProductTable({
                             >
                                 <div
                                     className={`
-                                        font-medium
+                                        ftext-lg font-semibold text-white
                                         ${
                                             selectedRow === index
                                                 ? "text-cyan-300"
@@ -81,7 +81,8 @@ function ProductTable({
 
                                 <div
                                     className={`
-                                        text-sm
+                                        text-base
+                                        font-medium
                                         mt-1
                                         ${
                                             product.stockQuantity <= 5
