@@ -60,6 +60,7 @@ border-blue-500/20
 backdrop-blur-xl
         px-6
         py-4
+        mb-6
 
     "
                 >

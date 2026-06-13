@@ -20,15 +20,13 @@ function CustomerSection({ customer, setCustomer, earnedPoints }) {
     return (
         <div
             className="
-
-
                 border
-                bg-slate-900/40
-border-blue-500/20
-backdrop-blur-xl
+              bg-slate-900/40
+              border-blue-500/20
+                backdrop-blur-xl
                 rounded-2xl
                 p-6
-
+                mb-6
             "
         >
             <div

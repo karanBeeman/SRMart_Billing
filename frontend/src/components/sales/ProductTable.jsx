@@ -21,6 +21,7 @@ backdrop-blur-xl
 
                 rounded-2xl
                 p-6
+                mb-6
             "
         >
             <table className="w-full table-fixed">

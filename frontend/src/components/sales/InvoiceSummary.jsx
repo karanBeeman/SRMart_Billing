@@ -1,4 +1,4 @@
-import { Save, Printer, Eye, Archive } from "lucide-react";
+import { Save, Printer, Archive } from "lucide-react";
 
 function InvoiceSummary({ subtotal, gst, points, total, onHoldBill }) {
     return (
@@ -6,13 +6,13 @@ function InvoiceSummary({ subtotal, gst, points, total, onHoldBill }) {
             className="
 
             bg-slate-900/40
-border-blue-500/20
-backdrop-blur-xl
-                border
+            border-blue-500/20
+              backdrop-blur-xl
+              border
 
-                rounded-2xl
-                p-6
-
+              rounded-2xl
+              p-6
+              mb-6
             "
         >
             <div className="space-y-3">
@@ -49,30 +49,33 @@ backdrop-blur-xl
                     <span>₹{points}</span>
                 </div>
 
-                <div
-                    className="
+                <div className="border-t border-white/10 mt-8 pt-8">
+                    <div
+                        className="
                         flex
                         justify-between
                         text-xl
                         font-bold
                         text-white
                     "
-                >
-                    <span>Total</span>
-                    <span>₹{total}</span>
+                    >
+                        <span>Total</span>
+                        <span>₹{total}</span>
+                    </div>
                 </div>
-            </div>
-
-            <div
-                className="
+                <div className="mt-auto pt-10">
+                    <div className="border-t border-white/10 mt-8 pt-8">
+                        <div className="flex gap-4">
+                            <div
+                                className="
                     flex
                     gap-4
                     mt-6
                 "
-            >
-                <button
-                    onClick={onHoldBill}
-                    className="
+                            >
+                                <button
+                                    onClick={onHoldBill}
+                                    className="
                 bg-orange-500
                 hover:bg-orange-600
                 text-white
@@ -83,13 +86,13 @@ backdrop-blur-xl
                 items-center
                 gap-2
                 "
-                >
-                    <Archive size={18} />
-                    Hold Bill
-                </button>
+                                >
+                                    <Archive size={18} />
+                                    Hold Bill
+                                </button>
 
-                <button
-                    className="
+                                <button
+                                    className="
                       bg-yellow-500
                       hover:bg-yellow-600
                       text-white
@@ -100,13 +103,13 @@ backdrop-blur-xl
                         items-center
                         gap-2
                     "
-                >
-                    <Save size={18} />
-                    Save
-                </button>
+                                >
+                                    <Save size={18} />
+                                    Save
+                                </button>
 
-                <button
-                    className="
+                                <button
+                                    className="
                         bg-green-500
                         hover:bg-green-600
                         text-white
@@ -117,10 +120,14 @@ backdrop-blur-xl
                         items-center
                         gap-2
                     "
-                >
-                    <Printer size={18} />
-                    Print
-                </button>
+                                >
+                                    <Printer size={18} />
+                                    Print
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

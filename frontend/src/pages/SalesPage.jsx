@@ -10,6 +10,7 @@ import InvoiceSummary from "../components/sales/InvoiceSummary.jsx";
 import SalesHeader from "../components/sales/SalesHeader.jsx";
 import useInvoiceActions from "../hooks/useInvoiceActions";
 import useProductTableNavigation from "../hooks/useProductTableNavigation.js";
+import PaymentSection from "../components/sales/PaymentSection.jsx";
 
 import useSalesProducts from "../hooks/useSalesProducts.js";
 import useInvoiceSummary from "../hooks/useInvoiceSummary.js";
@@ -113,12 +114,15 @@ function SalesPage() {
                 priceRefs={priceRefs}
             />
 
-            <InvoiceSummary
-                subtotal={subtotal}
-                gst={gst}
-                total={total}
-                onHoldBill={() => holdBill(invoice?.invoiceNumber, user)}
-            />
+            <div className="grid grid-cols-2 gap-6">
+                <InvoiceSummary
+                    subtotal={subtotal}
+                    gst={gst}
+                    total={total}
+                    onHoldBill={() => holdBill(invoice?.invoiceNumber, user)}
+                />
+                <PaymentSection total={total} />
+            </div>
 
             <CustomerSection
                 customer={customer}
