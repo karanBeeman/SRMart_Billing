@@ -13,7 +13,12 @@ public record CreateInvoiceResponse(
         String CreatedBy,
         String updatedBy,
         String createdAt,
-        String updatedAt
+        String updatedAt,
+        BigDecimal discountAmount,
+        BigDecimal loyaltyPointsUsed,
+        BigDecimal paidAmount,
+        BigDecimal balanceAmount,
+        BigDecimal changeReturn
 ) {
     public static CreateInvoiceResponse from(Invoice createdInvoice) {
         return new CreateInvoiceResponse(
@@ -25,7 +30,12 @@ public record CreateInvoiceResponse(
                 createdInvoice.getCreatedBy(),
                 createdInvoice.getUpdatedBy(),
                 createdInvoice.getCreatedAt().toString(),
-                createdInvoice.getUpdatedAt().toString()
+                createdInvoice.getUpdatedAt().toString(),
+                createdInvoice.getDiscountAmount(),
+                createdInvoice.getLoyaltyPointsUsed(),
+                createdInvoice.getPaidAmount(),
+                createdInvoice.getBalanceAmount(),
+                createdInvoice.getChangeReturn()
         );
     }
 }

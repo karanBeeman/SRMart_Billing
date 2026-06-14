@@ -1,6 +1,7 @@
 package com.sr.mart.software.entity;
 
 import com.sr.mart.software.enums.InvoiceStatus;
+import com.sr.mart.software.enums.Payment_mode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,6 +42,14 @@ public class Invoice extends BaseEntity {
 
     private BigDecimal discountAmount;
 
+    private BigDecimal loyaltyPointsUsed;
+
+    private BigDecimal paidAmount;
+
+    private BigDecimal balanceAmount;
+
+    private BigDecimal changeReturn;
+
     private String createdBy;
 
     private String updatedBy;
@@ -49,5 +58,17 @@ public class Invoice extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private Payment_mode paymentMode;
+
+    @Column(name = "cash_amount")
+    private BigDecimal cashAmount;
+
+    @Column(name = "upi_amount")
+    private BigDecimal upiAmount;
+
+    @Column(name = "card_amount")
+    private BigDecimal cardAmount;
 
 }

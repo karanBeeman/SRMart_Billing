@@ -1,19 +1,17 @@
-import { useMemo, useState } from "react";
 import { Smartphone, CreditCard, Banknote } from "lucide-react";
 
-function PaymentSection({ total }) {
-    const [cash, setCash] = useState("");
-    const [upi, setUpi] = useState("");
-    const [card, setCard] = useState("");
-
-    const paidAmount = useMemo(() => {
-        return Number(cash || 0) + Number(upi || 0) + Number(card || 0);
-    }, [cash, upi, card]);
-
-    const balance = Math.max(total - paidAmount, 0);
-
-    const change = Math.max(paidAmount - total, 0);
-
+function PaymentSection({
+    total,
+    cash,
+    setCash,
+    upi,
+    setUpi,
+    card,
+    setCard,
+    paidAmount,
+    balance,
+    changeReturn,
+}) {
     return (
         <div
             className="
@@ -32,7 +30,10 @@ function PaymentSection({ total }) {
 
             <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                    <Banknote className="text-green-400" size={20} />
+                    <Banknote
+                        size={20}
+                        className="text-green-400 flex-shrink-0"
+                    />
 
                     <input
                         type="number"
@@ -41,6 +42,7 @@ function PaymentSection({ total }) {
                         onChange={(e) => setCash(e.target.value)}
                         placeholder="Cash Amount"
                         className="
+                        no-spinner
                             w-full
                             p-3
                             rounded-xl
@@ -49,12 +51,16 @@ function PaymentSection({ total }) {
                             border-white/10
                             text-white
                             outline-none
+                            focus:border-green-400/50
                         "
                     />
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <Smartphone className="text-cyan-400" size={20} />
+                    <Smartphone
+                        size={20}
+                        className="text-cyan-400 flex-shrink-0"
+                    />
 
                     <input
                         type="number"
@@ -63,6 +69,7 @@ function PaymentSection({ total }) {
                         onChange={(e) => setUpi(e.target.value)}
                         placeholder="UPI Amount"
                         className="
+                        no-spinner
                             w-full
                             p-3
                             rounded-xl
@@ -71,12 +78,16 @@ function PaymentSection({ total }) {
                             border-white/10
                             text-white
                             outline-none
+                            focus:border-cyan-400/50
                         "
                     />
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <CreditCard className="text-yellow-400" size={20} />
+                    <CreditCard
+                        size={20}
+                        className="text-yellow-400 flex-shrink-0"
+                    />
 
                     <input
                         type="number"
@@ -85,6 +96,7 @@ function PaymentSection({ total }) {
                         onChange={(e) => setCard(e.target.value)}
                         placeholder="Card Amount"
                         className="
+                        no-spinner
                             w-full
                             p-3
                             rounded-xl
@@ -93,6 +105,7 @@ function PaymentSection({ total }) {
                             border-white/10
                             text-white
                             outline-none
+                            focus:border-yellow-400/50
                         "
                     />
                 </div>
@@ -100,7 +113,7 @@ function PaymentSection({ total }) {
 
             <div className="border-t border-white/10 mt-6 pt-6 space-y-3">
                 <div className="flex justify-between">
-                    <span className="text-gray-300">Bill Total</span>
+                    <span className="text-gray-300">Amount Payable</span>
 
                     <span className="text-white font-semibold">
                         ₹{total.toFixed(2)}
@@ -133,7 +146,7 @@ function PaymentSection({ total }) {
                     <span className="text-gray-300">Change Return</span>
 
                     <span className="text-cyan-400 font-semibold">
-                        ₹{change.toFixed(2)}
+                        ₹{changeReturn.toFixed(2)}
                     </span>
                 </div>
             </div>

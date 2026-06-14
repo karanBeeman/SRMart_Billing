@@ -8,10 +8,10 @@ import ProductTable from "../components/sales/ProductTable.jsx";
 import CustomerSection from "../components/customers/CustomerSection.jsx";
 import InvoiceSummary from "../components/sales/InvoiceSummary.jsx";
 import SalesHeader from "../components/sales/SalesHeader.jsx";
-import useInvoiceActions from "../hooks/useInvoiceActions";
-import useProductTableNavigation from "../hooks/useProductTableNavigation.js";
 import PaymentSection from "../components/sales/PaymentSection.jsx";
 
+import useInvoiceActions from "../hooks/useInvoiceActions";
+import useProductTableNavigation from "../hooks/useProductTableNavigation.js";
 import useSalesProducts from "../hooks/useSalesProducts.js";
 import useInvoiceSummary from "../hooks/useInvoiceSummary.js";
 import useInvoice from "../hooks/useInvoice.js";
@@ -54,15 +54,38 @@ function SalesPage() {
 
     const { holdBill } = useInvoiceActions();
 
+    const [customer, setCustomer] = useState(EMPTY_CUSTOMER);
+
+    const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
+
+    // Discount
+    const [discount, setDiscount] = useState("");
+
+    const [pointsUsed, setPointsUsed] = useState("");
+
+    // Payments
+    const [cash, setCash] = useState("");
+    const [upi, setUpi] = useState("");
+    const [card, setCard] = useState("");
+
+    const loyaltyPoints = Number(pointsUsed || 0);
+
+    const finalTotal = Math.max(
+        total - Number(discount || 0) - loyaltyPoints,
+        0
+    );
+
+    const paidAmount = Number(cash || 0) + Number(upi || 0) + Number(card || 0);
+
+    const balance = Math.max(finalTotal - paidAmount, 0);
+
+    const changeReturn = Math.max(paidAmount - finalTotal, 0);
+
     useEffect(() => {
         if (!loading && inputRef.current) {
             inputRef.current.focus();
         }
     }, [loading]);
-
-    const [customer, setCustomer] = useState({ EMPTY_CUSTOMER });
-
-    const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
 
     if (loading) {
         return (
@@ -118,10 +141,29 @@ function SalesPage() {
                 <InvoiceSummary
                     subtotal={subtotal}
                     gst={gst}
-                    total={total}
+                    originalTotal={total}
+                    discount={discount}
+                    setDiscount={setDiscount}
+                    pointsUsed={pointsUsed}
+                    setPointsUsed={setPointsUsed}
+                    total={finalTotal}
+                    paidAmount={paidAmount}
+                    changeReturn={changeReturn}
                     onHoldBill={() => holdBill(invoice?.invoiceNumber, user)}
                 />
-                <PaymentSection total={total} />
+
+                <PaymentSection
+                    total={finalTotal}
+                    cash={cash}
+                    setCash={setCash}
+                    upi={upi}
+                    setUpi={setUpi}
+                    card={card}
+                    setCard={setCard}
+                    paidAmount={paidAmount}
+                    balance={balance}
+                    changeReturn={changeReturn}
+                />
             </div>
 
             <CustomerSection

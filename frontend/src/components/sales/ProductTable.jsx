@@ -33,14 +33,14 @@ backdrop-blur-xl
                             border-white/10
                         "
                     >
-                        <th className="py-3 text-left">Product</th>
-                        <th className="py-3 text-center">Qty</th>
-                        <th className="py-3 text-center">MRP</th>
-                        <th className="py-3 text-center">Selling</th>
-                        <th className="py-3 text-center">CGST%</th>
-                        <th className="py-3 text-center">SGST%</th>
-                        <th className="py-3 text-center">Total</th>
-                        <th className="py-3 text-center">Delete</th>
+                        <th className="w-[26%] py-3 text-left">Product</th>
+                        <th className="w-[8%] py-3 text-center">Qty</th>
+                        <th className="w-[10%] py-3 text-center">MRP</th>
+                        <th className="w-[10%] py-3 text-center">Selling</th>
+                        <th className="w-[8%] py-3 text-center">CGST%</th>
+                        <th className="w-[8%] py-3 text-center">SGST%</th>
+                        <th className="w-[12%] py-3 text-center">Total</th>
+                        <th className="w-[6%] py-3 text-center">Delete</th>
                     </tr>
                 </thead>
 
@@ -58,6 +58,7 @@ backdrop-blur-xl
                             <td
                                 className={`
                                     py-4
+                                    pl-4
                                     text-left
                                     font-medium
                                     transition-all
@@ -70,7 +71,7 @@ backdrop-blur-xl
                             >
                                 <div
                                     className={`
-                                        ftext-lg font-semibold text-white
+                                        text-lg font-semibold truncate
                                         ${
                                             selectedRow === index
                                                 ? "text-emerald-300"
