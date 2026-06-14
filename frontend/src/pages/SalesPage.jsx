@@ -15,6 +15,7 @@ import useProductTableNavigation from "../hooks/useProductTableNavigation.js";
 import useSalesProducts from "../hooks/useSalesProducts.js";
 import useInvoiceSummary from "../hooks/useInvoiceSummary.js";
 import useInvoice from "../hooks/useInvoice.js";
+import usePaymentSummary from "../hooks/usePaymentSummary.js";
 
 function SalesPage() {
     const EMPTY_CUSTOMER = {
@@ -58,28 +59,27 @@ function SalesPage() {
 
     const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
 
-    // Discount
-    const [discount, setDiscount] = useState("");
+    const {
+        discount,
+        setDiscount,
 
-    const [pointsUsed, setPointsUsed] = useState("");
+        pointsUsed,
+        setPointsUsed,
 
-    // Payments
-    const [cash, setCash] = useState("");
-    const [upi, setUpi] = useState("");
-    const [card, setCard] = useState("");
+        cash,
+        setCash,
 
-    const loyaltyPoints = Number(pointsUsed || 0);
+        upi,
+        setUpi,
 
-    const finalTotal = Math.max(
-        total - Number(discount || 0) - loyaltyPoints,
-        0
-    );
+        card,
+        setCard,
 
-    const paidAmount = Number(cash || 0) + Number(upi || 0) + Number(card || 0);
-
-    const balance = Math.max(finalTotal - paidAmount, 0);
-
-    const changeReturn = Math.max(paidAmount - finalTotal, 0);
+        finalTotal,
+        paidAmount,
+        balance,
+        changeReturn,
+    } = usePaymentSummary(total);
 
     useEffect(() => {
         if (!loading && inputRef.current) {
