@@ -81,6 +81,25 @@ function SalesPage() {
         changeReturn,
     } = usePaymentSummary(total);
 
+    const getStatusStyle = (status) => {
+        switch (status) {
+            case "DRAFT":
+                return "bg-yellow-500/20 text-yellow-300";
+
+            case "HELD":
+                return "bg-orange-500/20 text-orange-300";
+
+            case "COMPLETED":
+                return "bg-green-500/20 text-green-300";
+
+            case "CANCELLED":
+                return "bg-red-500/20 text-red-300";
+
+            default:
+                return "bg-gray-500/20 text-gray-300";
+        }
+    };
+
     useEffect(() => {
         if (!loading && inputRef.current) {
             inputRef.current.focus();
@@ -97,34 +116,77 @@ function SalesPage() {
 
     return (
         <DashboardContainer>
-            <SalesHeader
-                user={user}
-                invoiceNumber={invoice?.invoiceNumber}
-                invoiceDate={
-                    invoice?.createdAt
-                        ? new Date(invoice.createdAt).toLocaleString("en-IN", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                          })
-                        : ""
-                }
-                status={invoice?.status}
-            />
+            <div className="grid grid-cols-[1fr_320px] gap-6 mb-6">
+                {/* Left Side */}
+                <div>
+                    <SalesHeader />
 
-            <ProductScanner
-                searchValue={searchValue}
-                onSearch={handleProductSearch}
-                onLookup={handleProductLookup}
-                activeIndex={activeIndex}
-                setActiveIndex={setActiveIndex}
-                suggestions={suggestions}
-                onSelectProduct={selectSuggestedProduct}
-                inputRef={inputRef}
-                clearSuggestions={clearSuggestions}
-            />
+                    <ProductScanner
+                        searchValue={searchValue}
+                        onSearch={handleProductSearch}
+                        onLookup={handleProductLookup}
+                        activeIndex={activeIndex}
+                        setActiveIndex={setActiveIndex}
+                        suggestions={suggestions}
+                        onSelectProduct={selectSuggestedProduct}
+                        inputRef={inputRef}
+                        clearSuggestions={clearSuggestions}
+                    />
+                </div>
+
+                {/* Right Side */}
+                <div
+                    className="
+            rounded-xl
+            border
+            bg-slate-900/40
+            border-blue-500/20
+            backdrop-blur-xl
+            p-6
+            h-fit
+        "
+                >
+                    <div className="grid grid-cols-[90px_1fr] gap-y-3">
+                        <span className="text-sm text-gray-300">Cashier</span>
+
+                        <span className="text-sm text-white">
+                            {user?.username}
+                        </span>
+
+                        <span className="text-sm text-gray-300">Bill No</span>
+
+                        <span className="text-lg font-bold text-white">
+                            {invoice?.invoiceNumber}
+                        </span>
+
+                        <span className="text-sm text-gray-300">Status</span>
+
+                        <span
+                            className={`
+        w-fit
+        rounded-full
+        px-3
+        py-1
+        text-xs
+        font-semibold
+        ${getStatusStyle(invoice?.status)}
+    `}
+                        >
+                            {invoice?.status}
+                        </span>
+
+                        <span className="text-sm text-gray-300">Date</span>
+
+                        <span className="text-sm text-white">
+                            {invoice?.createdAt
+                                ? new Date(invoice.createdAt).toLocaleString(
+                                      "en-IN"
+                                  )
+                                : ""}
+                        </span>
+                    </div>
+                </div>
+            </div>
 
             <ProductTable
                 products={products}

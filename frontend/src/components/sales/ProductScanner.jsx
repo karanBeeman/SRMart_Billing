@@ -35,38 +35,22 @@ function ProductScanner({
         <div
             ref={containerRef}
             className="
-                relative
-                z-50
-
-                border
-              bg-slate-900/40
-              border-blue-500/20
-                backdrop-blur-xl
-
-                rounded-2xl
-
-                p-6
-                mb-6
-            "
+        relative
+        z-50
+        mt-4
+    "
         >
-            <h2
-                className="
-                    text-white
-                    text-xl
-                    font-semibold
-                    mb-4
-                "
-            >
-                Product Search
-            </h2>
-
-            <div className="relative">
+            <div className="relative w-[70%]">
                 <ScanBarcode
+                    size={22}
                     className="
-                        absolute
-                        left-4
-                        top-4
-                        text-white
+                         absolute
+            left-4
+            top-1/2
+            -translate-y-1/2
+            text-cyan-400
+            pointer-events-none
+            z-10
                     "
                 />
 
@@ -115,21 +99,24 @@ function ProductScanner({
                     }}
                     placeholder="Scan barcode / Product ID / Product Name"
                     className="
-                        w-full
-                        pl-12
-                        py-4
+                       w-full
+            h-14
+            pl-12
+            pr-4
 
-                        rounded-xl
+            rounded-xl
 
-                        bg-white/10
+            bg-slate-900/40
+            backdrop-blur-xl
 
-                        border
-                        border-white/20
+            border
+            border-blue-500/20
 
-                        text-white
-                        placeholder:text-gray-300
+            text-white
+            placeholder:text-gray-300
 
-                        outline-none
+            outline-none
+            focus:border-cyan-400/50
                     "
                 />
 
@@ -144,14 +131,16 @@ function ProductScanner({
 
                             rounded-xl
 
-                            bg-[#2347D9]
+                            bg-slate-900
+                            backdrop-blur-xl
 
                             border
-                            border-white/20
+                            border-cyan-500/20
 
                             overflow-y-auto
                             max-h-72
 
+                            shadow-2xl
                             z-50
                         "
                     >
@@ -160,33 +149,31 @@ function ProductScanner({
                                 key={product.id}
                                 onClick={() => {
                                     onSelectProduct(product);
-
                                     setActiveIndex(-1);
                                 }}
                                 className={`
-                                        px-4
-                                        py-3
+                                    px-4
+                                    py-3
+                                    cursor-pointer
 
-                                        cursor-pointer
-
-                                        ${
-                                            activeIndex === index
-                                                ? "bg-white"
-                                                : "hover:bg-white/10"
-                                        }
-                                    `}
+                                    ${
+                                        activeIndex === index
+                                            ? "bg-cyan-500/15 border-l-4 border-cyan-400"
+                                            : "hover:bg-white/5"
+                                    }
+                                `}
                             >
                                 <div
                                     className="
-                                            flex
-                                            justify-between
-                                            items-center
-                                        "
+                                        flex
+                                        justify-between
+                                        items-center
+                                    "
                                 >
                                     <span
                                         className={
                                             activeIndex === index
-                                                ? "text-[#2347D9] font-semibold"
+                                                ? "text-cyan-300 font-semibold"
                                                 : "text-white"
                                         }
                                     >
@@ -196,7 +183,7 @@ function ProductScanner({
                                     <span
                                         className={
                                             activeIndex === index
-                                                ? "text-[#2347D9] font-semibold"
+                                                ? "text-cyan-300 font-semibold"
                                                 : "text-white"
                                         }
                                     >
