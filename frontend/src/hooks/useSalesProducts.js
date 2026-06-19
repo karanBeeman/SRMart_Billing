@@ -1,8 +1,17 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import productService from "../services/productService";
+import invoiceItemService from "../api/invoiceItemService";
 
-export default function useSalesProducts(inputRef) {
+export default function useSalesProducts(inputRef, invoiceNumber) {
+    useEffect(() => {
+        if (!invoiceNumber) {
+            return;
+        }
+
+        loadInvoiceItems();
+    }, [invoiceNumber]);
+
     const [searchValue, setSearchValue] = useState("");
     const [products, setProducts] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
@@ -61,19 +70,58 @@ export default function useSalesProducts(inputRef) {
         }, 300);
     };
 
-    const addProductToBill = (product) => {
-        setProducts((previous) => {
-            const existingProduct = previous.find(
-                (item) => item.id === product.id
-            );
+    const loadInvoiceItems = async () => {
+        try {
+            const response = await invoiceItemService.getItems(invoiceNumber);
 
-            if (existingProduct) {
+            const items = response.data || [];
+
+            setProducts(
+                items.map((item) => ({
+                    id: item.productId,
+
+                    invoiceItemId: item.id,
+
+                    productName: item.productName,
+
+                    qty: item.qty,
+
+                    mrpPrice: item.mrpPrice,
+
+                    sellingPrice: item.sellingPrice,
+
+                    cgstPercentage: item.cgstPercentage,
+
+                    sgstPercentage: item.sgstPercentage,
+
+                    stockQuantity: item.stockQuantity,
+
+                    total: item.lineTotal,
+                }))
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const addProductToState = (product, savedItem) => {
+        console.log("saved", savedItem);
+        setProducts((previous) => {
+            const existing = previous.find((item) => item.id === product.id);
+
+            if (existing) {
+                console.log(
+                    "existing item",
+                    existing,
+                    "product.id",
+                    product.id
+                );
                 return previous.map((item) =>
                     item.id === product.id
                         ? {
                               ...item,
-                              qty: item.qty + 1,
-                              total: (item.qty + 1) * item.sellingPrice,
+                              qty: savedItem.qty,
+                              total: savedItem.lineTotal,
                           }
                         : item
                 );
@@ -82,17 +130,28 @@ export default function useSalesProducts(inputRef) {
             return [
                 ...previous,
                 {
-                    ...product,
-                    qty: 1,
-                    total: product.sellingPrice,
+                    id: product.id,
+
+                    invoiceItemId: savedItem.id,
+
+                    productName: product.productName,
+
+                    qty: savedItem.qty,
+
+                    mrpPrice: product.mrpPrice,
+
+                    sellingPrice: product.sellingPrice,
+
+                    cgstPercentage: product.cgstPercentage,
+
+                    sgstPercentage: product.sgstPercentage,
+
+                    stockQuantity: product.stockQuantity,
+
+                    total: savedItem.lineTotal,
                 },
             ];
         });
-
-        setSearchValue("");
-        setSuggestions([]);
-        setActiveIndex(-1);
-        inputRef.current?.focus();
     };
 
     const handleProductLookup = async () => {
@@ -103,61 +162,126 @@ export default function useSalesProducts(inputRef) {
         try {
             const product = await productService.lookup(searchValue);
 
-            addProductToBill(product);
+            const response = await invoiceItemService.addItem(
+                invoiceNumber,
+                product.id
+            );
+            console.log("saved item", response.data);
+
+            console.log("api response", response.data);
+
+            addProductToState(product, response.data);
 
             setSearchValue("");
-            setSuggestions([]);
-            setActiveIndex(-1);
+            clearSuggestions();
+
+            inputRef.current?.focus();
         } catch (error) {
             toast.error(error?.response?.data?.message || "Product not found");
-            setSearchValue("");
-            setSuggestions([]);
-            inputRef.current?.focus();
         }
     };
 
-    const updateSellingPrice = (productId, newPrice) => {
-        setProducts((previous) =>
-            previous.map((product) =>
-                product.id === productId
-                    ? {
-                          ...product,
-                          sellingPrice: newPrice,
-                          total: newPrice * product.qty,
-                      }
-                    : product
-            )
-        );
+    const updateSellingPrice = async (productId, newPrice) => {
+        const product = products.find((p) => p.id === productId);
+
+        if (!product) {
+            return;
+        }
+
+        try {
+            const response = await invoiceItemService.updateItem(
+                product.invoiceItemId,
+                product.qty,
+                newPrice
+            );
+
+            const updated = response.data;
+
+            setProducts((previous) =>
+                previous.map((item) =>
+                    item.id === productId
+                        ? {
+                              ...item,
+                              sellingPrice: updated.sellingPrice,
+                              total: updated.lineTotal,
+                          }
+                        : item
+                )
+            );
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const updateQty = (productId, qty) => {
-        setProducts((previous) =>
-            previous.map((product) =>
-                product.id === productId
-                    ? {
-                          ...product,
-                          qty,
-                          total: Number(qty || 0) * product.sellingPrice,
-                      }
-                    : product
-            )
-        );
+    const updateQty = async (productId, qty) => {
+        const product = products.find((p) => p.id === productId);
+
+        if (!product) {
+            return;
+        }
+
+        try {
+            const response = await invoiceItemService.updateItem(
+                product.invoiceItemId,
+                qty,
+                product.sellingPrice
+            );
+
+            const updated = response.data;
+
+            setProducts((previous) =>
+                previous.map((item) =>
+                    item.id === productId
+                        ? {
+                              ...item,
+                              qty: updated.qty,
+                              total: updated.lineTotal,
+                          }
+                        : item
+                )
+            );
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const removeProduct = (productId) => {
-        console.log("removing product with id", productId);
-        setProducts((previous) =>
-            previous.filter((product) => product.id !== productId)
-        );
+    const removeProduct = async (productId) => {
+        const product = products.find((p) => p.id === productId);
+
+        if (!product) {
+            return;
+        }
+
+        try {
+            await invoiceItemService.deleteItem(product.invoiceItemId);
+
+            setProducts((previous) =>
+                previous.filter((item) => item.id !== productId)
+            );
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const selectSuggestedProduct = async (product, onProductAdded) => {
         try {
             const fullProduct = await productService.lookup(product.id);
 
-            addProductToBill(fullProduct);
+            const response = await invoiceItemService.addItem(
+                invoiceNumber,
+                fullProduct.id
+            );
+
+            console.log("api", response.data);
+
+            addProductToState(fullProduct, response.data);
+
+            setSearchValue("");
+            clearSuggestions();
 
             onProductAdded?.(fullProduct.id);
+
+            inputRef.current?.focus();
         } catch (error) {
             console.error(error);
         }

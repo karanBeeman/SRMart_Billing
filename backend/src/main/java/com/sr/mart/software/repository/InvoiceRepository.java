@@ -14,4 +14,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     Long getNextInvoiceSequence();
 
     Optional<Invoice> findByStatusAndCreatedBy(InvoiceStatus name, String by);
+
+    Optional<Invoice> findByInvoiceNumber(String invoiceNumber);
 }

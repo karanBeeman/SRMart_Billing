@@ -3,13 +3,19 @@ package com.sr.mart.software.service.impl;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.entity.Invoice;
+import com.sr.mart.software.entity.InvoiceItem;
+import com.sr.mart.software.entity.Product;
 import com.sr.mart.software.enums.InvoiceStatus;
 import com.sr.mart.software.exception.InvalidInvoiceException;
 import com.sr.mart.software.exception.InvoiceAlreadyExistsException;
-import com.sr.mart.software.model.CreateInvoiceResponse;
+import com.sr.mart.software.model.InvoiceItemResponse;
+import com.sr.mart.software.model.InvoiceResponse;
+import com.sr.mart.software.repository.InvoiceItemRepository;
 import com.sr.mart.software.repository.InvoiceRepository;
+import com.sr.mart.software.repository.ProductRepository;
 import com.sr.mart.software.service.InvoiceService;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,9 +28,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
 
+    private final InvoiceItemRepository invoiceItemRepository;
+
+    private final ProductRepository productRepository;
+
     @Override
     @Transactional
-    public CreateInvoiceResponse createDraftInvoice(
+    public InvoiceResponse createDraftInvoice(
         DraftInvoiceRequest request
     ) {
 
@@ -35,7 +45,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             );
 
         if (existingDraft.isPresent()) {
-            return CreateInvoiceResponse.from(
+            return InvoiceResponse.from(
                 existingDraft.get()
             );
         }
@@ -53,22 +63,134 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoice = invoiceRepository.save(invoice);
 
-        return CreateInvoiceResponse.from(invoice);
+        return InvoiceResponse.from(invoice);
     }
 
     @Override
     @Transactional
-    public CreateInvoiceResponse createInvoice(CreateInvoiceRequest invoiceRequest) {
+    public InvoiceResponse createInvoice(CreateInvoiceRequest invoiceRequest) {
 
         Invoice invoice = buildInvoice(invoiceRequest);
 
         try {
             invoice.setInvoiceNumber(generateNextInvoiceNumber());
             Invoice createdInvoice = invoiceRepository.save(invoice);
-            return CreateInvoiceResponse.from(createdInvoice);
+            return InvoiceResponse.from(createdInvoice);
         } catch (DataIntegrityViolationException e) {
             throw new InvoiceAlreadyExistsException("Invoice with the same idempotency key already exists", e);
         }
+    }
+
+
+    @Override
+    @Transactional
+    public InvoiceItemResponse createInvoiceLineItems(
+        String invoiceNumber,
+        Long productId
+    ) {
+
+        Invoice invoice =
+            invoiceRepository
+                .findByInvoiceNumber(invoiceNumber)
+                .orElseThrow(
+                    () -> new RuntimeException(
+                        "Invoice not found"
+                    )
+                );
+
+        Optional<InvoiceItem> existing =
+            invoiceItemRepository
+                .findByInvoiceAndProductId(
+                    invoice,
+                    productId
+                );
+
+        if (existing.isPresent()) {
+
+            InvoiceItem item = existing.get();
+
+            int newQty = item.getQty() + 1;
+
+            item.setQty(newQty);
+
+            item.setLineTotal(
+                item.getSellingPrice()
+                    .multiply(
+                        BigDecimal.valueOf(newQty)
+                    )
+            );
+
+            InvoiceItem createdItem = invoiceItemRepository.save(item);
+            return InvoiceItemResponse.from(createdItem, 10.00);
+
+        }
+
+        Product product =
+            productRepository
+                .findById(productId)
+                .orElseThrow(
+                    () -> new RuntimeException(
+                        "Product not found"
+                    )
+                );
+
+        InvoiceItem item =
+            InvoiceItem.builder()
+                .invoice(invoice)
+                .productId(product.getId())
+                .productName(product.getProductName())
+                .qty(1)
+                .mrpPrice(product.getMrpPrice())
+                .sellingPrice(
+                    product.getSellingPrice()
+                )
+                .cgstPercentage(
+                    product.getCgstPercentage()
+                )
+                .sgstPercentage(
+                    product.getSgstPercentage()
+                )
+                .lineTotal(
+                    product.getSellingPrice()
+                )
+                .build();
+
+        InvoiceItem createdItem = invoiceItemRepository.save(item);
+
+        return InvoiceItemResponse.from(createdItem, 10.00);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<InvoiceItemResponse> getInvoiceLineItems(
+        String invoiceNumber
+    ) {
+
+        Invoice invoice =
+            invoiceRepository
+                .findByInvoiceNumber(invoiceNumber)
+                .orElseThrow(
+                    () -> new RuntimeException(
+                        "Invoice not found"
+                    )
+                );
+
+        return invoiceItemRepository
+            .findByInvoice(invoice)
+            .stream()
+            .map(item -> {
+
+                Product product =
+                    productRepository
+                        .findById(item.getProductId())
+                        .orElseThrow();
+
+                return InvoiceItemResponse.from(
+                    item,
+                    product.getStockQuantity()
+                );
+            })
+            .toList();
     }
 
     private String generateNextInvoiceNumber() {

@@ -2,12 +2,17 @@ package com.sr.mart.software.service;
 
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
-import com.sr.mart.software.model.CreateInvoiceResponse;
-import jakarta.validation.Valid;
+import com.sr.mart.software.model.InvoiceItemResponse;
+import com.sr.mart.software.model.InvoiceResponse;
+import java.util.List;
 
 public interface InvoiceService {
 
-    CreateInvoiceResponse createInvoice(CreateInvoiceRequest request);
+    InvoiceResponse createInvoice(CreateInvoiceRequest request);
 
-    CreateInvoiceResponse createDraftInvoice(DraftInvoiceRequest invoiceRequest);
+    InvoiceResponse createDraftInvoice(DraftInvoiceRequest invoiceRequest);
+
+    InvoiceItemResponse createInvoiceLineItems(String addInvoiceLineItems, Long productId);
+
+    List<InvoiceItemResponse> getInvoiceLineItems(String invoiceNumber);
 }

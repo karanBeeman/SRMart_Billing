@@ -1,4 +1,5 @@
 import { Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 function ProductRow({
     product,
@@ -12,6 +13,17 @@ function ProductRow({
     updateSellingPrice,
     removeProduct,
 }) {
+    const [qtyValue, setQtyValue] = useState(product.qty);
+    const [priceValue, setPriceValue] = useState(product.sellingPrice);
+
+    useEffect(() => {
+        setQtyValue(product.qty);
+    }, [product.qty]);
+
+    useEffect(() => {
+        setPriceValue(product.sellingPrice);
+    }, [product.sellingPrice]);
+
     return (
         <tr
             ref={selectedRow === index ? selectedRowRef : null}
@@ -70,24 +82,26 @@ function ProductRow({
                     ref={(el) => (qtyRefs.current[index] = el)}
                     type="number"
                     min="1"
-                    value={product.qty}
-                    onChange={(e) => updateQty(product.id, e.target.value)}
+                    value={qtyValue}
+                    onChange={(e) => setQtyValue(e.target.value)}
                     onBlur={(e) => {
-                        const qty = Number(e.target.value);
+                        const qty = Number(qtyValue);
 
-                        updateQty(product.id, qty > 0 ? qty : 1);
+                        if (qty !== product.qty) {
+                            updateQty(product.id, qty > 0 ? qty : 1);
+                        }
                     }}
                     className="
-                                        no-spinner
-                                        w-20
-                                        p-2
-                                        rounded
-                                        bg-white/10
-                                        text-white
-                                        text-center
-                                        border
-                                        border-white/10
-                                    "
+            no-spinner
+            w-20
+            p-2
+            rounded
+            bg-white/10
+            text-white
+            text-center
+            border
+            border-white/10
+        "
                 />
             </td>
 
@@ -96,21 +110,27 @@ function ProductRow({
             <td className="text-center">
                 <input
                     ref={(el) => (priceRefs.current[index] = el)}
-                    type="text"
-                    value={product.sellingPrice}
-                    onChange={(e) =>
-                        updateSellingPrice(product.id, Number(e.target.value))
-                    }
+                    type="number"
+                    value={priceValue}
+                    onChange={(e) => setPriceValue(e.target.value)}
+                    onBlur={(e) => {
+                        const price = Number(priceValue);
+
+                        if (price !== product.sellingPrice) {
+                            updateSellingPrice(product.id, price);
+                        }
+                    }}
                     className="
-                                        w-20
-                                        p-2
-                                        rounded
-                                        bg-white/10
-                                        text-white
-                                        text-center
-                                        border
-                                        border-white/10
-                                    "
+                    no-spinner
+            w-20
+            p-2
+            rounded
+            bg-white/10
+            text-white
+            text-center
+            border
+            border-white/10
+        "
                 />
             </td>
 

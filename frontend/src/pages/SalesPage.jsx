@@ -28,6 +28,10 @@ function SalesPage() {
 
     const inputRef = useRef(null);
 
+    const { user } = useAuth();
+
+    const { invoice, loading } = useInvoice(user);
+
     const {
         searchValue,
         products,
@@ -44,14 +48,10 @@ function SalesPage() {
         updateSellingPrice,
         removeProduct,
         clearSuggestions,
-    } = useSalesProducts(inputRef);
+    } = useSalesProducts(inputRef, invoice?.invoiceNumber);
 
     const { selectedRow, setSelectedRow, qtyRefs, priceRefs } =
         useProductTableNavigation(products, removeProduct);
-
-    const { user } = useAuth();
-
-    const { invoice, loading } = useInvoice(user);
 
     const { holdBill } = useInvoiceActions();
 

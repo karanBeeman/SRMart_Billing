@@ -4,7 +4,7 @@ import com.sr.mart.software.entity.Invoice;
 import com.sr.mart.software.enums.InvoiceStatus;
 import java.math.BigDecimal;
 
-public record CreateInvoiceResponse(
+public record InvoiceResponse(
         String invoiceNumber,
         BigDecimal subtotal,
         BigDecimal gstAmount,
@@ -20,8 +20,8 @@ public record CreateInvoiceResponse(
         BigDecimal balanceAmount,
         BigDecimal changeReturn
 ) {
-    public static CreateInvoiceResponse from(Invoice createdInvoice) {
-        return new CreateInvoiceResponse(
+    public static InvoiceResponse from(Invoice createdInvoice) {
+        return new InvoiceResponse(
                 createdInvoice.getInvoiceNumber(),
                 createdInvoice.getSubtotal(),
                 createdInvoice.getGstAmount(),
