@@ -9,6 +9,7 @@ import com.sr.mart.software.exception.InvalidInvoiceException;
 import com.sr.mart.software.exception.InvoiceAlreadyExistsException;
 import com.sr.mart.software.model.CreateInvoiceResponse;
 import com.sr.mart.software.model.HoldInvoiceResponse;
+import com.sr.mart.software.model.InvoiceResponse;
 import com.sr.mart.software.repository.InvoiceRepository;
 import com.sr.mart.software.service.InvoiceService;
 import java.math.BigDecimal;
@@ -20,26 +21,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
 
     @Override
-    @Transactional
-    public CreateInvoiceResponse createDraftInvoice(
-        DraftInvoiceRequest request
-    ) {
+    public InvoiceResponse createDraftInvoice(DraftInvoiceRequest request) {
 
-        Optional<Invoice> existingDraft =
-            invoiceRepository.findByStatusAndCreatedBy(
+        Optional<Invoice> existingDraft = invoiceRepository.findByStatusAndCreatedBy(
                 InvoiceStatus.DRAFT,
                 request.createdBy()
             );
 
         if (existingDraft.isPresent()) {
-            return CreateInvoiceResponse.from(
-                existingDraft.get()
-            );
+            return InvoiceResponse.from(existingDraft.get());
         }
 
         Invoice invoice = Invoice.builder()
@@ -47,27 +43,24 @@ public class InvoiceServiceImpl implements InvoiceService {
             .status(InvoiceStatus.DRAFT)
             .build();
 
-        invoice = invoiceRepository.save(invoice);
+        invoice = invoiceRepository.saveAndFlush(invoice);
 
         invoice.setInvoiceNumber(
             String.format("INV%06d", invoice.getId())
         );
 
-        invoice = invoiceRepository.save(invoice);
-
-        return CreateInvoiceResponse.from(invoice);
+        return InvoiceResponse.from(invoice);
     }
 
     @Override
-    @Transactional
-    public CreateInvoiceResponse createInvoice(CreateInvoiceRequest invoiceRequest) {
+    public InvoiceResponse createInvoice(CreateInvoiceRequest invoiceRequest) {
 
         Invoice invoice = buildInvoice(invoiceRequest);
 
         try {
             invoice.setInvoiceNumber(generateNextInvoiceNumber());
             Invoice createdInvoice = invoiceRepository.save(invoice);
-            return CreateInvoiceResponse.from(createdInvoice);
+            return InvoiceResponse.from(createdInvoice);
         } catch (DataIntegrityViolationException e) {
             throw new InvoiceAlreadyExistsException("Invoice with the same idempotency key already exists", e);
         }

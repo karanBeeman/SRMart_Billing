@@ -27,6 +27,6 @@ public record AddProductRequest(
     BigDecimal sgstPercentage,
 
     @NotNull
-    Integer stockQuantity
+    Double stockQuantity
 ) {
 }

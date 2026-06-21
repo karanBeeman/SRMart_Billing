@@ -5,6 +5,7 @@ import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
 import com.sr.mart.software.model.CreateInvoiceResponse;
 import com.sr.mart.software.model.HoldInvoiceResponse;
+import com.sr.mart.software.model.InvoiceResponse;
 import com.sr.mart.software.service.InvoiceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,18 +24,18 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
     @PostMapping("/create/draft/invoices")
-    public ResponseEntity<CreateInvoiceResponse> createDraftInvoice(
+    public ResponseEntity<InvoiceResponse> createDraftInvoice(
         @Valid @RequestBody DraftInvoiceRequest invoiceRequest
     ) {
-        CreateInvoiceResponse res = invoiceService.createDraftInvoice(invoiceRequest);
+        InvoiceResponse res = invoiceService.createDraftInvoice(invoiceRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 
     @PostMapping("/create/invoices")
-    public ResponseEntity<CreateInvoiceResponse> createInvoice(
+    public ResponseEntity<InvoiceResponse> createInvoice(
         @Valid @RequestBody CreateInvoiceRequest invoiceRequest
     ) {
-        CreateInvoiceResponse res = invoiceService.createInvoice(invoiceRequest);
+        InvoiceResponse res = invoiceService.createInvoice(invoiceRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 

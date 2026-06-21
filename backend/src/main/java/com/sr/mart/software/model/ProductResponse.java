@@ -14,7 +14,7 @@ public record ProductResponse(
     BigDecimal sellingPrice,
     BigDecimal cgstPercentage,
     BigDecimal sgstPercentage,
-    Integer stockQuantity,
+    Double stockQuantity,
     Boolean active,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
