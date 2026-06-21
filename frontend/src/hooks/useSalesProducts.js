@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import productService from "../services/productService";
-import invoiceItemService from "../api/invoiceItemService";
+import invoiceItemService from "../services/invoiceItemService.js";
 
 export default function useSalesProducts(inputRef, invoiceNumber) {
     useEffect(() => {
@@ -72,9 +72,7 @@ export default function useSalesProducts(inputRef, invoiceNumber) {
 
     const loadInvoiceItems = async () => {
         try {
-            const response = await invoiceItemService.getItems(invoiceNumber);
-
-            const items = response.data || [];
+            const items = await invoiceItemService.getItems(invoiceNumber);
 
             setProducts(
                 items.map((item) => ({
@@ -105,17 +103,10 @@ export default function useSalesProducts(inputRef, invoiceNumber) {
     };
 
     const addProductToState = (product, savedItem) => {
-        console.log("saved", savedItem);
         setProducts((previous) => {
             const existing = previous.find((item) => item.id === product.id);
 
             if (existing) {
-                console.log(
-                    "existing item",
-                    existing,
-                    "product.id",
-                    product.id
-                );
                 return previous.map((item) =>
                     item.id === product.id
                         ? {
@@ -162,15 +153,11 @@ export default function useSalesProducts(inputRef, invoiceNumber) {
         try {
             const product = await productService.lookup(searchValue);
 
-            const response = await invoiceItemService.addItem(
+            const savedItem = await invoiceItemService.addItem(
                 invoiceNumber,
                 product.id
             );
-            console.log("saved item", response.data);
-
-            console.log("api response", response.data);
-
-            addProductToState(product, response.data);
+            addProductToState(product, savedItem);
 
             setSearchValue("");
             clearSuggestions();
@@ -189,13 +176,10 @@ export default function useSalesProducts(inputRef, invoiceNumber) {
         }
 
         try {
-            const response = await invoiceItemService.updateItem(
+            const updated = await invoiceItemService.updateSellingPrice(
                 product.invoiceItemId,
-                product.qty,
                 newPrice
             );
-
-            const updated = response.data;
 
             setProducts((previous) =>
                 previous.map((item) =>
@@ -221,13 +205,12 @@ export default function useSalesProducts(inputRef, invoiceNumber) {
         }
 
         try {
-            const response = await invoiceItemService.updateItem(
+            const updated = await invoiceItemService.updateQtyItem(
                 product.invoiceItemId,
-                qty,
-                product.sellingPrice
+                qty
             );
 
-            const updated = response.data;
+            console.log("updated", updated);
 
             setProducts((previous) =>
                 previous.map((item) =>
@@ -267,14 +250,12 @@ export default function useSalesProducts(inputRef, invoiceNumber) {
         try {
             const fullProduct = await productService.lookup(product.id);
 
-            const response = await invoiceItemService.addItem(
+            const savedItem = await invoiceItemService.addItem(
                 invoiceNumber,
                 fullProduct.id
             );
 
-            console.log("api", response.data);
-
-            addProductToState(fullProduct, response.data);
+            addProductToState(fullProduct, savedItem);
 
             setSearchValue("");
             clearSuggestions();

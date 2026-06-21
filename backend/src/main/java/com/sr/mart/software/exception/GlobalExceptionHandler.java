@@ -143,4 +143,41 @@ public class GlobalExceptionHandler {
                         )
                 );
     }
+
+    @ExceptionHandler(ProductAlreadyExistsWithSameBarcode.class)
+    public ResponseEntity<ErrorResponse> productAlreadyExistsWithSameBarcode(ProductAlreadyExistsWithSameBarcode ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.CONFLICT.value(),
+                                LocalDateTime.now()
+                        )
+                );
+    }
+
+    @ExceptionHandler(InvoiceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> invoiceNotFoundExceptionHandler(InvoiceNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.NOT_FOUND.value(),
+                                LocalDateTime.now()
+                        )
+                );
+    }
+
+    @ExceptionHandler(InvoiceLineItemNotFoundException.class)
+    public ResponseEntity<ErrorResponse> invoiceLineItemNotFoundExceptionHandler(InvoiceLineItemNotFoundException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(
+                                ex.getMessage(),
+                                HttpStatus.NOT_FOUND.value(),
+                                LocalDateTime.now()
+                        )
+                );
+    }
 }

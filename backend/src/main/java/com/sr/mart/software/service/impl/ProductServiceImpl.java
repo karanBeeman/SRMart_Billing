@@ -2,6 +2,7 @@ package com.sr.mart.software.service.impl;
 
 import com.sr.mart.software.dto.AddProductRequest;
 import com.sr.mart.software.entity.Product;
+import com.sr.mart.software.exception.ProductAlreadyExistsWithSameBarcode;
 import com.sr.mart.software.exception.ProductNotFoundException;
 import com.sr.mart.software.model.ProductResponse;
 import com.sr.mart.software.repository.ProductRepository;
@@ -25,11 +26,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse addProduct(AddProductRequest request) {
 
-        /* if (productRepository.existsByBarcode(request.barcode())) {
-            throw new BusinessException(
+        if (productRepository.existsByBarcode(request.barcode())) {
+            throw new ProductAlreadyExistsWithSameBarcode(
                 "Product already exists with barcode: "
                     + request.barcode());
-        } */
+        }
 
         Product product = Product.builder()
             .barcode(request.barcode())

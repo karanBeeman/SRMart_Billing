@@ -12,7 +12,4 @@ public interface InvoiceService {
 
     InvoiceResponse createDraftInvoice(DraftInvoiceRequest invoiceRequest);
 
-    InvoiceItemResponse createInvoiceLineItems(String addInvoiceLineItems, Long productId);
-
-    List<InvoiceItemResponse> getInvoiceLineItems(String invoiceNumber);
 }
