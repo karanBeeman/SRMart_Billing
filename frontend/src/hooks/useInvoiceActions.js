@@ -1,4 +1,5 @@
 import invoiceService from "../services/invoiceService";
+import { toast } from "react-toastify";
 
 export default function useInvoiceActions() {
     const holdBill = async (invoiceNumber, user) => {
@@ -7,17 +8,13 @@ export default function useInvoiceActions() {
                 updatedBy: user.username,
             });
 
-            return {
-                success: true,
-                message: "Bill placed on hold",
-            };
+            toast.success("Bill put on hold");
         } catch (error) {
-            console.error(error);
+            toast.error(
+                error?.response?.data?.message || "Failed to hold bill"
+            );
 
-            return {
-                success: false,
-                message: "Failed to hold bill",
-            };
+            throw error;
         }
     };
 

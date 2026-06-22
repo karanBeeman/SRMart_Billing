@@ -12,6 +12,10 @@ export default function useSalesProducts(inputRef, invoiceNumber) {
         loadInvoiceItems();
     }, [invoiceNumber]);
 
+    const clearProducts = () => {
+        setProducts([]);
+    };
+
     const [searchValue, setSearchValue] = useState("");
     const [products, setProducts] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
@@ -283,5 +287,6 @@ export default function useSalesProducts(inputRef, invoiceNumber) {
         updateSellingPrice,
         removeProduct,
         clearSuggestions,
+        clearProducts,
     };
 }

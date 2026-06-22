@@ -5,29 +5,40 @@ export default function useInvoice(user) {
     const [invoice, setInvoice] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const createDraftInvoice = async () => {
-            console.log("user", user);
-            try {
-                const response = await invoiceService.createDraftInvoice({
-                    createdBy: user.username,
-                });
+    const createDraftInvoice = async () => {
+        try {
+            const response = await invoiceService.createDraftInvoice({
+                createdBy: user.username,
+            });
 
-                setInvoice(response);
-            } catch (error) {
-                console.error("Failed to create draft invoice", error);
+            setInvoice(response);
+
+            return response;
+        } catch (error) {
+            console.error("Failed to create draft invoice", error);
+        }
+    };
+
+    useEffect(() => {
+        const loadInvoice = async () => {
+            if (!user) {
+                return;
+            }
+
+            try {
+                await createDraftInvoice();
             } finally {
                 setLoading(false);
             }
         };
 
-        if (user) {
-            createDraftInvoice();
-        }
+        loadInvoice();
     }, [user]);
 
     return {
         invoice,
         loading,
+        createDraftInvoice,
+        setInvoice,
     };
 }
