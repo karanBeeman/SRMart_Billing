@@ -10,7 +10,7 @@ public record InvoiceResponse(
         BigDecimal gstAmount,
         BigDecimal totalAmount,
         InvoiceStatus status,
-        String CreatedBy,
+        String createdBy,
         String updatedBy,
         String createdAt,
         String updatedAt,
