@@ -30,7 +30,7 @@ function SalesPage() {
 
     const { user } = useAuth();
 
-    const { invoice, loading } = useInvoice(user);
+    const { invoice, loading, createDraftInvoice } = useInvoice(user);
 
     const {
         searchValue,
@@ -48,6 +48,7 @@ function SalesPage() {
         updateSellingPrice,
         removeProduct,
         clearSuggestions,
+        clearProducts,
     } = useSalesProducts(inputRef, invoice?.invoiceNumber);
 
     const { selectedRow, setSelectedRow, qtyRefs, priceRefs } =
@@ -97,6 +98,22 @@ function SalesPage() {
 
             default:
                 return "bg-gray-500/20 text-gray-300";
+        }
+    };
+
+    const handleHoldBill = async () => {
+        try {
+            await holdBill(invoice.invoiceNumber, user);
+
+            clearProducts();
+
+            setCustomer(EMPTY_CUSTOMER);
+
+            await createDraftInvoice();
+
+            inputRef.current?.focus();
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -211,7 +228,7 @@ function SalesPage() {
                     total={finalTotal}
                     paidAmount={paidAmount}
                     changeReturn={changeReturn}
-                    onHoldBill={() => holdBill(invoice?.invoiceNumber, user)}
+                    onHoldBill={handleHoldBill}
                 />
 
                 <PaymentSection
