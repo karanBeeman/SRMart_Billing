@@ -4,7 +4,7 @@ export default function useInvoiceActions() {
     const holdBill = async (invoiceNumber, user) => {
         try {
             await invoiceService.holdInvoice(invoiceNumber, {
-                createdBy: user.username,
+                updatedBy: user.username,
             });
 
             return {
