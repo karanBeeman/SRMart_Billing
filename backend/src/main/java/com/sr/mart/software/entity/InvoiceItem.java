@@ -1,5 +1,6 @@
 package com.sr.mart.software.entity;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,6 +17,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@SuppressFBWarnings(
+    value = {
+        "EI_EXPOSE_REP",
+        "EI_EXPOSE_REP2"
+    },
+    justification = "JPA entity relationships are intentionally mutable"
+)
 @Entity
 @Table(name = "invoice_items")
 @Getter
