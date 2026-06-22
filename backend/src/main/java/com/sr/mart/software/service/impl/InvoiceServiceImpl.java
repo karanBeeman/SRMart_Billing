@@ -2,6 +2,7 @@ package com.sr.mart.software.service.impl;
 
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
+import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
 import com.sr.mart.software.entity.Invoice;
 import com.sr.mart.software.enums.InvoiceStatus;
 import com.sr.mart.software.exception.InvalidInvoiceException;
@@ -102,5 +103,21 @@ public class InvoiceServiceImpl implements InvoiceService {
                 || status.equalsIgnoreCase("BILLED")
                 || status.equalsIgnoreCase("CASHED")
                 || status.equalsIgnoreCase("CANCELLED");
+    }
+
+    @Override
+    public InvoiceResponse updateInvoice(String invoiceNumber, HoldInvoiceStatusRequest invoiceRequest) {
+        Invoice existingInvoice = invoiceRepository.findByInvoiceNumber(String.valueOf(invoiceNumber))
+            .orElseThrow(() -> new InvalidInvoiceException("Invoice not found with number: " + invoiceNumber));
+
+        if (existingInvoice.getStatus() != InvoiceStatus.DRAFT) {
+            throw new InvalidInvoiceException("Only draft invoices can be updated");
+        }
+
+        existingInvoice.setUpdatedBy(invoiceRequest.updatedBy());
+        existingInvoice.setStatus(InvoiceStatus.HOLD);
+
+        Invoice updatedInvoice = invoiceRepository.save(existingInvoice);
+        return InvoiceResponse.from(updatedInvoice);
     }
 }

@@ -1,5 +1,4 @@
 package com.sr.mart.software.dto;
 
-public record DraftInvoiceRequest (
-        String createdBy) {
+public record DraftInvoiceRequest(String createdBy) {
 }

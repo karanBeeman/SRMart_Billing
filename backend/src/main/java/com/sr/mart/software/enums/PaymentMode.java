@@ -1,6 +1,6 @@
 package com.sr.mart.software.enums;
 
-public enum Payment_mode {
+public enum PaymentMode {
 
     CASH,
     UPI,

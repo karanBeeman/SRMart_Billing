@@ -1,12 +1,12 @@
 package com.sr.mart.software;
 
+import com.sr.mart.software.repository.InvoiceItemRepository;
 import com.sr.mart.software.repository.InvoiceRepository;
 import com.sr.mart.software.repository.ProductRepository;
 import com.sr.mart.software.repository.RoleRepository;
 import com.sr.mart.software.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -29,6 +29,9 @@ class SoftwareApplicationTests {
 
     @MockitoBean
     private InvoiceRepository invoiceRepository;
+
+    @MockitoBean
+    private InvoiceItemRepository invoiceItemRepository;
 
     @Test
     void contextLoads() {
