@@ -3,7 +3,6 @@ package com.sr.mart.software.controller;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
-import com.sr.mart.software.model.HoldInvoiceResponse;
 import com.sr.mart.software.model.InvoiceResponse;
 import com.sr.mart.software.service.InvoiceService;
 import jakarta.validation.Valid;
@@ -39,11 +38,11 @@ public class InvoiceController {
     }
 
     @PutMapping("/hold/invoices/{invoiceNumber}")
-    public ResponseEntity<HoldInvoiceResponse> updateInvoice(
+    public ResponseEntity<InvoiceResponse> updateInvoice(
         @PathVariable String invoiceNumber,
         @Valid @RequestBody HoldInvoiceStatusRequest invoiceRequest
     ) {
-        HoldInvoiceResponse res = invoiceService.updateInvoice(invoiceNumber, invoiceRequest);
+        InvoiceResponse res = invoiceService.updateInvoice(invoiceNumber, invoiceRequest);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }

@@ -3,7 +3,6 @@ package com.sr.mart.software.service;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
-import com.sr.mart.software.model.HoldInvoiceResponse;
 import com.sr.mart.software.model.InvoiceResponse;
 
 public interface InvoiceService {
@@ -12,5 +11,5 @@ public interface InvoiceService {
 
     InvoiceResponse createDraftInvoice(DraftInvoiceRequest invoiceRequest);
 
-    HoldInvoiceResponse updateInvoice(String invoiceNumber, HoldInvoiceStatusRequest invoiceRequest);
+    InvoiceResponse updateInvoice(String invoiceNumber, HoldInvoiceStatusRequest invoiceRequest);
 }

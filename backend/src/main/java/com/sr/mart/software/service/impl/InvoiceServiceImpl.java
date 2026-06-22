@@ -7,7 +7,6 @@ import com.sr.mart.software.entity.Invoice;
 import com.sr.mart.software.enums.InvoiceStatus;
 import com.sr.mart.software.exception.InvalidInvoiceException;
 import com.sr.mart.software.exception.InvoiceAlreadyExistsException;
-import com.sr.mart.software.model.HoldInvoiceResponse;
 import com.sr.mart.software.model.InvoiceResponse;
 import com.sr.mart.software.repository.InvoiceRepository;
 import com.sr.mart.software.service.InvoiceService;
@@ -107,7 +106,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public HoldInvoiceResponse updateInvoice(String invoiceNumber, HoldInvoiceStatusRequest invoiceRequest) {
+    public InvoiceResponse updateInvoice(String invoiceNumber, HoldInvoiceStatusRequest invoiceRequest) {
         Invoice existingInvoice = invoiceRepository.findByInvoiceNumber(String.valueOf(invoiceNumber))
             .orElseThrow(() -> new InvalidInvoiceException("Invoice not found with number: " + invoiceNumber));
 
@@ -119,6 +118,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         existingInvoice.setStatus(InvoiceStatus.HOLD);
 
         Invoice updatedInvoice = invoiceRepository.save(existingInvoice);
-        return HoldInvoiceResponse.from(updatedInvoice);
+        return InvoiceResponse.from(updatedInvoice);
     }
 }
