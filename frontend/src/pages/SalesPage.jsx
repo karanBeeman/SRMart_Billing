@@ -16,6 +16,7 @@ import useSalesProducts from "../hooks/useSalesProducts.js";
 import useInvoiceSummary from "../hooks/useInvoiceSummary.js";
 import useInvoice from "../hooks/useInvoice.js";
 import usePaymentSummary from "../hooks/usePaymentSummary.js";
+import { toast } from "react-toastify";
 
 function SalesPage() {
     const EMPTY_CUSTOMER = {
@@ -102,6 +103,12 @@ function SalesPage() {
     };
 
     const handleHoldBill = async () => {
+        if (products.length === 0) {
+            toast.warning(
+                "Add at least one product before putting bill on hold"
+            );
+            return;
+        }
         try {
             await holdBill(invoice.invoiceNumber, user);
 

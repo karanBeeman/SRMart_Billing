@@ -8,6 +8,7 @@ import com.sr.mart.software.enums.InvoiceStatus;
 import com.sr.mart.software.exception.InvalidInvoiceException;
 import com.sr.mart.software.exception.InvoiceAlreadyExistsException;
 import com.sr.mart.software.model.InvoiceResponse;
+import com.sr.mart.software.repository.InvoiceItemRepository;
 import com.sr.mart.software.repository.InvoiceRepository;
 import com.sr.mart.software.service.InvoiceService;
 import java.math.BigDecimal;
@@ -23,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
+
+    private final InvoiceItemRepository invoiceItemRepository;
 
     @Override
     public InvoiceResponse createDraftInvoice(DraftInvoiceRequest request) {
@@ -43,9 +46,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoice = invoiceRepository.saveAndFlush(invoice);
 
-        invoice.setInvoiceNumber(
-            String.format("INV%06d", invoice.getId())
-        );
+        invoice.setInvoiceNumber(String.format("INV%06d", invoice.getId()));
 
         return InvoiceResponse.from(invoice);
     }
@@ -112,6 +113,14 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         if (existingInvoice.getStatus() != InvoiceStatus.DRAFT) {
             throw new InvalidInvoiceException("Only draft invoices can be updated");
+        }
+
+        long itemCount = invoiceItemRepository.countByInvoice(existingInvoice);
+
+        if (itemCount == 0) {
+            throw new InvalidInvoiceException(
+                "Cannot put an empty bill on hold"
+            );
         }
 
         existingInvoice.setUpdatedBy(invoiceRequest.updatedBy());

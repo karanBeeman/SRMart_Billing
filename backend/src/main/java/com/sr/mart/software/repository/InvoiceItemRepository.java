@@ -14,4 +14,5 @@ public interface InvoiceItemRepository extends JpaRepository<InvoiceItem, Long> 
 
     Optional<InvoiceItem> findByInvoiceAndProductId(Invoice invoice, Long productId);
 
+    long countByInvoice(Invoice invoice);
 }
