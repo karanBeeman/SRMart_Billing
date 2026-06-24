@@ -1,4 +1,10 @@
-import { Smartphone, CreditCard, Banknote } from "lucide-react";
+import {
+    Smartphone,
+    CreditCard,
+    Banknote,
+    CheckCircle,
+    Printer,
+} from "lucide-react";
 
 function PaymentSection({
     total,
@@ -11,6 +17,8 @@ function PaymentSection({
     paidAmount,
     balance,
     changeReturn,
+    onCompleteSale,
+    onCompleteAndPrint,
 }) {
     return (
         <div
@@ -148,6 +156,55 @@ function PaymentSection({
                     <span className="text-cyan-400 font-semibold">
                         ₹{changeReturn.toFixed(2)}
                     </span>
+                </div>
+            </div>
+            <div className="border-t border-white/10 mt-6 pt-6">
+                <div className="flex gap-4">
+                    <button
+                        onClick={onCompleteSale}
+                        disabled={balance > 0}
+                        className="
+                flex-1
+                bg-green-500
+                hover:bg-green-600
+                disabled:bg-gray-600
+                disabled:cursor-not-allowed
+                text-white
+                py-4
+                rounded-xl
+                flex
+                items-center
+                justify-center
+                gap-2
+                font-semibold
+            "
+                    >
+                        <CheckCircle size={18} />
+                        Complete Sale
+                    </button>
+
+                    <button
+                        onClick={onCompleteAndPrint}
+                        disabled={balance > 0}
+                        className="
+                flex-1
+                bg-cyan-500
+                hover:bg-cyan-600
+                disabled:bg-gray-600
+                disabled:cursor-not-allowed
+                text-white
+                py-3
+                rounded-xl
+                flex
+                items-center
+                justify-center
+                gap-2
+                font-semibold
+            "
+                    >
+                        <Printer size={18} />
+                        Complete & Print
+                    </button>
                 </div>
             </div>
         </div>

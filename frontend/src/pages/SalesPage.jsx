@@ -17,6 +17,7 @@ import useInvoiceSummary from "../hooks/useInvoiceSummary.js";
 import useInvoice from "../hooks/useInvoice.js";
 import usePaymentSummary from "../hooks/usePaymentSummary.js";
 import { toast } from "react-toastify";
+import ResumeBillModal from "../components/sales/ResumeBillModal";
 
 function SalesPage() {
     const EMPTY_CUSTOMER = {
@@ -60,6 +61,14 @@ function SalesPage() {
     const [customer, setCustomer] = useState(EMPTY_CUSTOMER);
 
     const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
+
+    const [showResumeModal, setShowResumeModal] = useState(false);
+
+    const handleResumeBill = (bill) => {
+        console.log("Resume Bill", bill);
+
+        setShowResumeModal(false);
+    };
 
     const {
         discount,
@@ -123,6 +132,23 @@ function SalesPage() {
             console.error(error);
         }
     };
+
+    const [heldBills] = useState([
+        {
+            invoiceNumber: "INV000012",
+            totalAmount: 450,
+            itemCount: 7,
+            previewItems: ["Bread", "Milk", "Rice"],
+            heldAt: "10:22 PM",
+        },
+        {
+            invoiceNumber: "INV000013",
+            totalAmount: 180,
+            itemCount: 3,
+            previewItems: ["Coke", "Chips", "Biscuits"],
+            heldAt: "10:30 PM",
+        },
+    ]);
 
     useEffect(() => {
         if (!loading && inputRef.current) {
@@ -236,6 +262,14 @@ function SalesPage() {
                     paidAmount={paidAmount}
                     changeReturn={changeReturn}
                     onHoldBill={handleHoldBill}
+                    onResumeBill={() => setShowResumeModal(true)}
+                />
+
+                <ResumeBillModal
+                    open={showResumeModal}
+                    onClose={() => setShowResumeModal(false)}
+                    bills={heldBills}
+                    onResume={handleResumeBill}
                 />
 
                 <PaymentSection
@@ -256,6 +290,13 @@ function SalesPage() {
                 customer={customer}
                 setCustomer={setCustomer}
                 earnedPoints={earnedPoints}
+            />
+
+            <ResumeBillModal
+                open={showResumeModal}
+                onClose={() => setShowResumeModal(false)}
+                bills={heldBills}
+                onResume={handleResumeBill}
             />
         </DashboardContainer>
     );

@@ -12,6 +12,7 @@ function InvoiceSummary({
     paidAmount,
     changeReturn,
     onHoldBill,
+    onResumeBill,
 }) {
     return (
         <div
@@ -178,39 +179,18 @@ function InvoiceSummary({
                                     <Archive size={18} />
                                     Hold Bill
                                 </button>
-
                                 <button
+                                    onClick={onResumeBill}
                                     className="
-                      bg-yellow-500
-                      hover:bg-yellow-600
-                      text-white
-                        px-6
-                        py-3
-                        rounded-xl
-                        flex
-                        items-center
-                        gap-2
-                    "
+        bg-blue-500
+        hover:bg-blue-600
+        text-white
+        px-6
+        py-3
+        rounded-xl
+    "
                                 >
-                                    <Save size={18} />
-                                    Save
-                                </button>
-
-                                <button
-                                    className="
-                        bg-green-500
-                        hover:bg-green-600
-                        text-white
-                        px-6
-                        py-3
-                        rounded-xl
-                        flex
-                        items-center
-                        gap-2
-                    "
-                                >
-                                    <Printer size={18} />
-                                    Print
+                                    Resume Bill
                                 </button>
                             </div>
                         </div>
