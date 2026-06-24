@@ -5,6 +5,7 @@ import com.sr.mart.software.dto.UpdateInvoiceQtyItemRequest;
 import com.sr.mart.software.dto.UpdateInvoiceSellingPriceItemRequest;
 import com.sr.mart.software.model.InvoiceItemResponse;
 import com.sr.mart.software.service.InvoiceItemService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@SuppressFBWarnings(
+    value = "EI_EXPOSE_REP2",
+    justification = "Spring-managed service injected via constructor"
+)
 public class InvoiceItemController {
 
     private final InvoiceItemService invoiceItemService;
