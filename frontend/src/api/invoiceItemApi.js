@@ -24,7 +24,7 @@ const invoiceItemApi = {
     },
 
     deleteItem(invoiceItemId) {
-        return api.delete(`/invoice-items/${invoiceItemId}`);
+        return api.delete(`/delete/invoice-items/${invoiceItemId}`);
     },
 };
 

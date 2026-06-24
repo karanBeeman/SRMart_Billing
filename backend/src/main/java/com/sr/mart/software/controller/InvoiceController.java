@@ -45,4 +45,5 @@ public class InvoiceController {
         InvoiceResponse res = invoiceService.updateInvoice(invoiceNumber, invoiceRequest);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
+
 }

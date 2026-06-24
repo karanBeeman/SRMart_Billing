@@ -28,6 +28,8 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
 
     private final ProductRepository productRepository;
 
+    private static final String INVOICE_ITEM_NOT_FOUND =  "Invoice item not found for the given id:";
+
     @Override
     @Transactional
     public InvoiceItemResponse createInvoiceLineItems(String invoiceNumber, Long productId) {
@@ -110,7 +112,7 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
                 .findById(invoiceItemId)
                 .orElseThrow(
                     () -> new InvoiceLineItemNotFoundException(
-                        "Invoice item not found for the given id: " + invoiceItemId
+                        INVOICE_ITEM_NOT_FOUND + invoiceItemId
                     )
                 );
 
@@ -135,7 +137,7 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
                 .findById(invoiceItemId)
                 .orElseThrow(
                     () -> new InvoiceLineItemNotFoundException(
-                        "Invoice item not found for the given id: " + invoiceItemId
+                        INVOICE_ITEM_NOT_FOUND + invoiceItemId
                     )
                 );
 
@@ -150,6 +152,21 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
         InvoiceItem updatedItem = invoiceItemRepository.save(item);
 
         return InvoiceItemResponse.from(updatedItem, product.getStockQuantity());
+    }
+
+    @Transactional
+    @Override
+    public void deleteInvoice(Long invoiceItemId) {
+        InvoiceItem item =
+            invoiceItemRepository
+                .findById(invoiceItemId)
+                .orElseThrow(
+                    () -> new InvoiceLineItemNotFoundException(
+                        INVOICE_ITEM_NOT_FOUND + invoiceItemId
+                    )
+                );
+
+        invoiceItemRepository.delete(item);
     }
 
     private Product findProductByIdFromProductRepository(Long productId) {

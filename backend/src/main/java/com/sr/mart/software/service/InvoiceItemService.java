@@ -13,4 +13,6 @@ public interface InvoiceItemService {
     InvoiceItemResponse updateQty(Long invoiceItemId, Double qty);
 
     InvoiceItemResponse updateSellingPrice(Long invoiceItemId, BigDecimal sellingPrice);
+
+    void deleteInvoice(Long invoiceItemId);
 }
