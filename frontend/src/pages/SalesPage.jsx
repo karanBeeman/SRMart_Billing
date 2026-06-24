@@ -10,24 +10,17 @@ import InvoiceSummary from "../components/sales/InvoiceSummary.jsx";
 import SalesHeader from "../components/sales/SalesHeader.jsx";
 import PaymentSection from "../components/sales/PaymentSection.jsx";
 
-import useInvoiceActions from "../hooks/useInvoiceActions";
 import useProductTableNavigation from "../hooks/useProductTableNavigation.js";
 import useSalesProducts from "../hooks/useSalesProducts.js";
 import useInvoiceSummary from "../hooks/useInvoiceSummary.js";
 import useInvoice from "../hooks/useInvoice.js";
 import usePaymentSummary from "../hooks/usePaymentSummary.js";
-import { toast } from "react-toastify";
 import ResumeBillModal from "../components/sales/ResumeBillModal";
+import { EMPTY_CUSTOMER } from "../constants/salesConstants";
+import InvoiceInfoCard from "../components/sales/InvoiceInfoCard.jsx";
+import useHeldBills from "../hooks/useHeldBills.js";
 
 function SalesPage() {
-    const EMPTY_CUSTOMER = {
-        id: null,
-        name: "",
-        phone: "",
-        address: "",
-        availablePoints: 0,
-    };
-
     const inputRef = useRef(null);
 
     const { user } = useAuth();
@@ -56,99 +49,47 @@ function SalesPage() {
     const { selectedRow, setSelectedRow, qtyRefs, priceRefs } =
         useProductTableNavigation(products, removeProduct);
 
-    const { holdBill } = useInvoiceActions();
-
     const [customer, setCustomer] = useState(EMPTY_CUSTOMER);
 
     const { subtotal, gst, total, earnedPoints } = useInvoiceSummary(products);
 
-    const [showResumeModal, setShowResumeModal] = useState(false);
+    const {
+        heldBills,
+        showResumeModal,
+        setShowResumeModal,
+        handleHoldBill,
+        handleResumeBill,
+    } = useHeldBills({
+        invoice,
+        user,
+        products,
+        clearProducts,
+        createDraftInvoice,
+        inputRef,
+        setCustomer,
+        emptyCustomer: EMPTY_CUSTOMER,
+    });
 
-    const handleResumeBill = (bill) => {
-        console.log("Resume Bill", bill);
+    const openResumeModal = () => setShowResumeModal(true);
 
-        setShowResumeModal(false);
-    };
+    const closeResumeModal = () => setShowResumeModal(false);
 
     const {
         discount,
         setDiscount,
-
         pointsUsed,
         setPointsUsed,
-
         cash,
         setCash,
-
         upi,
         setUpi,
-
         card,
         setCard,
-
         finalTotal,
         paidAmount,
         balance,
         changeReturn,
     } = usePaymentSummary(total);
-
-    const getStatusStyle = (status) => {
-        switch (status) {
-            case "DRAFT":
-                return "bg-yellow-500/20 text-yellow-300";
-
-            case "HELD":
-                return "bg-orange-500/20 text-orange-300";
-
-            case "COMPLETED":
-                return "bg-green-500/20 text-green-300";
-
-            case "CANCELLED":
-                return "bg-red-500/20 text-red-300";
-
-            default:
-                return "bg-gray-500/20 text-gray-300";
-        }
-    };
-
-    const handleHoldBill = async () => {
-        if (products.length === 0) {
-            toast.warning(
-                "Add at least one product before putting bill on hold"
-            );
-            return;
-        }
-        try {
-            await holdBill(invoice.invoiceNumber, user);
-
-            clearProducts();
-
-            setCustomer(EMPTY_CUSTOMER);
-
-            await createDraftInvoice();
-
-            inputRef.current?.focus();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const [heldBills] = useState([
-        {
-            invoiceNumber: "INV000012",
-            totalAmount: 450,
-            itemCount: 7,
-            previewItems: ["Bread", "Milk", "Rice"],
-            heldAt: "10:22 PM",
-        },
-        {
-            invoiceNumber: "INV000013",
-            totalAmount: 180,
-            itemCount: 3,
-            previewItems: ["Coke", "Chips", "Biscuits"],
-            heldAt: "10:30 PM",
-        },
-    ]);
 
     useEffect(() => {
         if (!loading && inputRef.current) {
@@ -183,59 +124,7 @@ function SalesPage() {
                         clearSuggestions={clearSuggestions}
                     />
                 </div>
-
-                {/* Right Side */}
-                <div
-                    className="
-            rounded-xl
-            border
-            bg-slate-900/40
-            border-blue-500/20
-            backdrop-blur-xl
-            p-6
-            h-fit
-        "
-                >
-                    <div className="grid grid-cols-[90px_1fr] gap-y-3">
-                        <span className="text-sm text-gray-300">Cashier</span>
-
-                        <span className="text-sm text-white">
-                            {user?.username}
-                        </span>
-
-                        <span className="text-sm text-gray-300">Bill No</span>
-
-                        <span className="text-lg font-bold text-white">
-                            {invoice?.invoiceNumber}
-                        </span>
-
-                        <span className="text-sm text-gray-300">Status</span>
-
-                        <span
-                            className={`
-        w-fit
-        rounded-full
-        px-3
-        py-1
-        text-xs
-        font-semibold
-        ${getStatusStyle(invoice?.status)}
-    `}
-                        >
-                            {invoice?.status}
-                        </span>
-
-                        <span className="text-sm text-gray-300">Date</span>
-
-                        <span className="text-sm text-white">
-                            {invoice?.createdAt
-                                ? new Date(invoice.createdAt).toLocaleString(
-                                      "en-IN"
-                                  )
-                                : ""}
-                        </span>
-                    </div>
-                </div>
+                <InvoiceInfoCard invoice={invoice} user={user} />
             </div>
 
             <ProductTable
@@ -262,14 +151,7 @@ function SalesPage() {
                     paidAmount={paidAmount}
                     changeReturn={changeReturn}
                     onHoldBill={handleHoldBill}
-                    onResumeBill={() => setShowResumeModal(true)}
-                />
-
-                <ResumeBillModal
-                    open={showResumeModal}
-                    onClose={() => setShowResumeModal(false)}
-                    bills={heldBills}
-                    onResume={handleResumeBill}
+                    onResumeBill={openResumeModal}
                 />
 
                 <PaymentSection
@@ -291,10 +173,9 @@ function SalesPage() {
                 setCustomer={setCustomer}
                 earnedPoints={earnedPoints}
             />
-
             <ResumeBillModal
                 open={showResumeModal}
-                onClose={() => setShowResumeModal(false)}
+                onClose={closeResumeModal}
                 bills={heldBills}
                 onResume={handleResumeBill}
             />
