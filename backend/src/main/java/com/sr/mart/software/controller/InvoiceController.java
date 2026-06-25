@@ -1,5 +1,6 @@
 package com.sr.mart.software.controller;
 
+import com.sr.mart.software.dto.CompleteInvoiceRequest;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
@@ -44,6 +45,16 @@ public class InvoiceController {
     ) {
         InvoiceResponse res = invoiceService.updateInvoice(invoiceNumber, invoiceRequest);
         return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @PutMapping("/complete/invoices/{invoiceNumber}")
+    public ResponseEntity<InvoiceResponse> completeInvoice(
+        @PathVariable String invoiceNumber,
+        @RequestBody CompleteInvoiceRequest request
+    ) {
+        return ResponseEntity.ok(
+            invoiceService.completeInvoice(invoiceNumber, request)
+        );
     }
 
 }

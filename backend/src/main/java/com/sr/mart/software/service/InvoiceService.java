@@ -1,5 +1,6 @@
 package com.sr.mart.software.service;
 
+import com.sr.mart.software.dto.CompleteInvoiceRequest;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
@@ -12,4 +13,6 @@ public interface InvoiceService {
     InvoiceResponse createDraftInvoice(DraftInvoiceRequest invoiceRequest);
 
     InvoiceResponse updateInvoice(String invoiceNumber, HoldInvoiceStatusRequest invoiceRequest);
+
+    InvoiceResponse completeInvoice(String invoiceNumber, CompleteInvoiceRequest request);
 }

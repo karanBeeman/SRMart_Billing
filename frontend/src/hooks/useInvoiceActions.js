@@ -7,7 +7,6 @@ export default function useInvoiceActions() {
             await invoiceService.holdInvoice(invoiceNumber, {
                 updatedBy: user.username,
             });
-
         } catch (error) {
             toast.error(
                 error?.response?.data?.message || "Failed to hold bill"
