@@ -8,18 +8,24 @@ import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
 import com.sr.mart.software.entity.Invoice;
 import com.sr.mart.software.entity.InvoiceItem;
+import com.sr.mart.software.entity.Product;
 import com.sr.mart.software.enums.InvoiceStatus;
 import com.sr.mart.software.enums.PaymentMode;
 import com.sr.mart.software.exception.InvalidInvoiceException;
 import com.sr.mart.software.exception.InvoiceAlreadyExistsException;
 import com.sr.mart.software.exception.InvoiceNotFoundException;
+import com.sr.mart.software.exception.ProductNotFoundException;
 import com.sr.mart.software.model.InvoiceResponse;
 import com.sr.mart.software.repository.InvoiceItemRepository;
 import com.sr.mart.software.repository.InvoiceRepository;
+import com.sr.mart.software.repository.ProductRepository;
 import com.sr.mart.software.service.InvoiceService;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -33,6 +39,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
 
     private final InvoiceItemRepository invoiceItemRepository;
+
+    private final ProductRepository productRepository;
 
     @Override
     public InvoiceResponse createDraftInvoice(DraftInvoiceRequest request) {
@@ -161,6 +169,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         updateInvoiceAmounts(invoice, items);
 
+        updateProductStock(items);
+
         updatePaymentDetails(invoice, request);
 
         invoice.setDiscountAmount(request.discount());
@@ -171,6 +181,32 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceRepository.save(invoice);
 
         return InvoiceResponse.from(invoice);
+    }
+
+    private void updateProductStock(List<InvoiceItem> items) {
+        List<Long> productIds = items.stream()
+            .map(InvoiceItem::getProductId)
+            .toList();
+
+        Map<Long, Product> products =
+            productRepository.findAllById(productIds)
+                .stream()
+                .collect(Collectors.toMap(Product::getId, Function.identity()));
+
+        for (InvoiceItem item : items) {
+
+            Product product = products.get(item.getProductId());
+
+            if (product == null) {
+                throw new ProductNotFoundException("product not found with id: " + item.getProductId());
+            }
+
+            double currentStock = product.getStockQuantity() == null
+                ? 0.0
+                : product.getStockQuantity();
+
+            product.setStockQuantity(currentStock - item.getQty());
+        }
     }
 
     private void updateInvoiceAmounts(
