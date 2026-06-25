@@ -8,7 +8,6 @@ export default function useInvoiceActions() {
                 updatedBy: user.username,
             });
 
-            toast.success("Bill put on hold");
         } catch (error) {
             toast.error(
                 error?.response?.data?.message || "Failed to hold bill"

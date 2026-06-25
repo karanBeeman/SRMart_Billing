@@ -8,6 +8,10 @@ const invoiceApi = {
     holdInvoice(invoiceNumber, request) {
         return apiClient.put(`/hold/invoices/${invoiceNumber}`, request);
     },
+
+    completeInvoice(invoiceNumber, request) {
+        return apiClient.put(`/complete/invoices/${invoiceNumber}`, request);
+    },
 };
 
 export default invoiceApi;

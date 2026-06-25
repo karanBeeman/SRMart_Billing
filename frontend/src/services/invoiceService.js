@@ -12,6 +12,15 @@ const invoiceService = {
 
         return response.data;
     },
+
+    async completeInvoice(invoiceNumber, request) {
+        const response = await invoiceApi.completeInvoice(
+            invoiceNumber,
+            request
+        );
+
+        return response.data;
+    },
 };
 
 export default invoiceService;

@@ -19,6 +19,7 @@ import ResumeBillModal from "../components/sales/ResumeBillModal";
 import { EMPTY_CUSTOMER } from "../constants/salesConstants";
 import InvoiceInfoCard from "../components/sales/InvoiceInfoCard.jsx";
 import useHeldBills from "../hooks/useHeldBills.js";
+import useCompleteSaleWorkflow from "../hooks/useCompleteSaleWorkflow.js";
 
 function SalesPage() {
     const inputRef = useRef(null);
@@ -74,22 +75,20 @@ function SalesPage() {
 
     const closeResumeModal = () => setShowResumeModal(false);
 
-    const {
-        discount,
-        setDiscount,
-        pointsUsed,
-        setPointsUsed,
-        cash,
-        setCash,
-        upi,
-        setUpi,
-        card,
-        setCard,
-        finalTotal,
-        paidAmount,
-        balance,
-        changeReturn,
-    } = usePaymentSummary(total);
+    const payment = usePaymentSummary(total);
+
+    const { completing, handleCompleteSale, handleCompleteAndPrint } =
+        useCompleteSaleWorkflow({
+            invoice,
+            user,
+            payment,
+            products,
+            clearProducts,
+            setCustomer,
+            emptyCustomer: EMPTY_CUSTOMER,
+            createDraftInvoice,
+            inputRef,
+        });
 
     useEffect(() => {
         if (!loading && inputRef.current) {
@@ -143,28 +142,22 @@ function SalesPage() {
                     subtotal={subtotal}
                     gst={gst}
                     originalTotal={total}
-                    discount={discount}
-                    setDiscount={setDiscount}
-                    pointsUsed={pointsUsed}
-                    setPointsUsed={setPointsUsed}
-                    total={finalTotal}
-                    paidAmount={paidAmount}
-                    changeReturn={changeReturn}
+                    discount={payment.discount}
+                    setDiscount={payment.setDiscount}
+                    pointsUsed={payment.pointsUsed}
+                    setPointsUsed={payment.setPointsUsed}
+                    total={payment.finalTotal}
+                    paidAmount={payment.paidAmount}
+                    changeReturn={payment.changeReturn}
                     onHoldBill={handleHoldBill}
                     onResumeBill={openResumeModal}
                 />
 
                 <PaymentSection
-                    total={finalTotal}
-                    cash={cash}
-                    setCash={setCash}
-                    upi={upi}
-                    setUpi={setUpi}
-                    card={card}
-                    setCard={setCard}
-                    paidAmount={paidAmount}
-                    balance={balance}
-                    changeReturn={changeReturn}
+                    payment={payment}
+                    completing={completing}
+                    handleCompleteSale={handleCompleteSale}
+                    onCompleteAndPrint={handleCompleteAndPrint}
                 />
             </div>
 

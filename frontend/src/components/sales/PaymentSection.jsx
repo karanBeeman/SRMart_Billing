@@ -7,17 +7,9 @@ import {
 } from "lucide-react";
 
 function PaymentSection({
-    total,
-    cash,
-    setCash,
-    upi,
-    setUpi,
-    card,
-    setCard,
-    paidAmount,
-    balance,
-    changeReturn,
-    onCompleteSale,
+    payment,
+    completing,
+    handleCompleteSale,
     onCompleteAndPrint,
 }) {
     return (
@@ -46,11 +38,11 @@ function PaymentSection({
                     <input
                         type="number"
                         min="0"
-                        value={cash}
-                        onChange={(e) => setCash(e.target.value)}
+                        value={payment.cash}
+                        onChange={(e) => payment.setCash(e.target.value)}
                         placeholder="Cash Amount"
                         className="
-                        no-spinner
+                            no-spinner
                             w-full
                             p-3
                             rounded-xl
@@ -73,11 +65,11 @@ function PaymentSection({
                     <input
                         type="number"
                         min="0"
-                        value={upi}
-                        onChange={(e) => setUpi(e.target.value)}
+                        value={payment.upi}
+                        onChange={(e) => payment.setUpi(e.target.value)}
                         placeholder="UPI Amount"
                         className="
-                        no-spinner
+                            no-spinner
                             w-full
                             p-3
                             rounded-xl
@@ -100,11 +92,11 @@ function PaymentSection({
                     <input
                         type="number"
                         min="0"
-                        value={card}
-                        onChange={(e) => setCard(e.target.value)}
+                        value={payment.card}
+                        onChange={(e) => payment.setCard(e.target.value)}
                         placeholder="Card Amount"
                         className="
-                        no-spinner
+                            no-spinner
                             w-full
                             p-3
                             rounded-xl
@@ -122,88 +114,93 @@ function PaymentSection({
             <div className="border-t border-white/10 mt-6 pt-6 space-y-3">
                 <div className="flex justify-between">
                     <span className="text-gray-300">Amount Payable</span>
-
                     <span className="text-white font-semibold">
-                        ₹{total.toFixed(2)}
+                        ₹{payment.finalTotal.toFixed(2)}
                     </span>
                 </div>
 
                 <div className="flex justify-between">
                     <span className="text-gray-300">Paid Amount</span>
-
                     <span className="text-green-400 font-semibold">
-                        ₹{paidAmount.toFixed(2)}
+                        ₹{payment.paidAmount.toFixed(2)}
                     </span>
                 </div>
 
                 <div className="flex justify-between">
                     <span className="text-gray-300">Balance</span>
-
                     <span
                         className={
-                            balance > 0
+                            payment.balance > 0
                                 ? "text-red-400 font-semibold"
                                 : "text-green-400 font-semibold"
                         }
                     >
-                        ₹{balance.toFixed(2)}
+                        ₹{payment.balance.toFixed(2)}
                     </span>
                 </div>
 
                 <div className="flex justify-between">
                     <span className="text-gray-300">Change Return</span>
-
                     <span className="text-cyan-400 font-semibold">
-                        ₹{changeReturn.toFixed(2)}
+                        ₹{payment.changeReturn.toFixed(2)}
                     </span>
                 </div>
             </div>
+
             <div className="border-t border-white/10 mt-6 pt-6">
                 <div className="flex gap-4">
                     <button
-                        onClick={onCompleteSale}
-                        disabled={balance > 0}
+                        onClick={handleCompleteSale}
+                        disabled={
+                            payment.balance > 0 ||
+                            payment.finalTotal <= 0 ||
+                            completing
+                        }
                         className="
-                flex-1
-                bg-green-500
-                hover:bg-green-600
-                disabled:bg-gray-600
-                disabled:cursor-not-allowed
-                text-white
-                py-4
-                rounded-xl
-                flex
-                items-center
-                justify-center
-                gap-2
-                font-semibold
-            "
+                            flex-1
+                            bg-green-500
+                            hover:bg-green-600
+                            disabled:bg-gray-600
+                            disabled:cursor-not-allowed
+                            text-white
+                            py-4
+                            rounded-xl
+                            flex
+                            items-center
+                            justify-center
+                            gap-2
+                            font-semibold
+                        "
                     >
                         <CheckCircle size={18} />
-                        Complete Sale
+                        {completing ? "Completing..." : "Complete Sale"}
                     </button>
 
                     <button
                         onClick={onCompleteAndPrint}
-                        disabled={balance > 0}
+                        disabled={
+                            payment.balance > 0 ||
+                            payment.finalTotal <= 0 ||
+                            completing
+                        }
                         className="
-                flex-1
-                bg-cyan-500
-                hover:bg-cyan-600
-                disabled:bg-gray-600
-                disabled:cursor-not-allowed
-                text-white
-                py-3
-                rounded-xl
-                flex
-                items-center
-                justify-center
-                gap-2
-                font-semibold
-            "
+                            flex-1
+                            bg-cyan-500
+                            hover:bg-cyan-600
+                            disabled:bg-gray-600
+                            disabled:cursor-not-allowed
+                            text-white
+                            py-4
+                            rounded-xl
+                            flex
+                            items-center
+                            justify-center
+                            gap-2
+                            font-semibold
+                        "
                     >
                         <Printer size={18} />
-                        Complete & Print
+                        {completing ? "Completing..." : "Complete & Print"}
                     </button>
                 </div>
             </div>

@@ -15,6 +15,14 @@ export default function usePaymentSummary(total) {
         0
     );
 
+    const resetPayment = () => {
+        setDiscount("");
+        setPointsUsed("");
+        setCash("");
+        setUpi("");
+        setCard("");
+    };
+
     const paidAmount = Number(cash || 0) + Number(upi || 0) + Number(card || 0);
 
     const balance = Math.max(finalTotal - paidAmount, 0);
@@ -41,5 +49,6 @@ export default function usePaymentSummary(total) {
         paidAmount,
         balance,
         changeReturn,
+        resetPayment,
     };
 }
