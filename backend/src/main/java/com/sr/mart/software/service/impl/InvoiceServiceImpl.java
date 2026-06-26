@@ -1,7 +1,5 @@
 package com.sr.mart.software.service.impl;
 
-import static com.fasterxml.jackson.databind.util.ClassUtil.defaultValue;
-
 import com.sr.mart.software.dto.CompleteInvoiceRequest;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
@@ -16,6 +14,7 @@ import com.sr.mart.software.exception.InvoiceAlreadyExistsException;
 import com.sr.mart.software.exception.InvoiceNotFoundException;
 import com.sr.mart.software.exception.ProductNotFoundException;
 import com.sr.mart.software.model.InvoiceResponse;
+import com.sr.mart.software.model.ResumeInvoiceResponse;
 import com.sr.mart.software.repository.InvoiceItemRepository;
 import com.sr.mart.software.repository.InvoiceRepository;
 import com.sr.mart.software.repository.ProductRepository;
@@ -143,6 +142,17 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Invoice updatedInvoice = invoiceRepository.save(existingInvoice);
         return InvoiceResponse.from(updatedInvoice);
+    }
+
+    @Override
+    public List<ResumeInvoiceResponse> resumeInvoices() {
+        List<Invoice> holdInvoices = invoiceRepository.findInvoicesByStatus(InvoiceStatus.HOLD);
+        return holdInvoices.stream()
+                .map(invoice -> {
+                    List<InvoiceItem> items = invoiceItemRepository.findByInvoice(invoice);
+                    return ResumeInvoiceResponse.from(invoice, items);
+                })
+                .toList();
     }
 
     @Transactional

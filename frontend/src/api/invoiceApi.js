@@ -12,6 +12,10 @@ const invoiceApi = {
     completeInvoice(invoiceNumber, request) {
         return apiClient.put(`/complete/invoices/${invoiceNumber}`, request);
     },
+
+    getHeldInvoices() {
+        return apiClient.get(`/resume/invoices`);
+    },
 };
 
 export default invoiceApi;
