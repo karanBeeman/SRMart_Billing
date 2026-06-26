@@ -4,7 +4,6 @@ import com.sr.mart.software.dto.CompleteInvoiceRequest;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
-import com.sr.mart.software.dto.ResumeInvoiceRequest;
 import com.sr.mart.software.entity.Invoice;
 import com.sr.mart.software.entity.InvoiceItem;
 import com.sr.mart.software.entity.Product;
