@@ -20,6 +20,7 @@ import { EMPTY_CUSTOMER } from "../constants/salesConstants";
 import InvoiceInfoCard from "../components/sales/InvoiceInfoCard.jsx";
 import useHeldBills from "../hooks/useHeldBills.js";
 import useCompleteSaleWorkflow from "../hooks/useCompleteSaleWorkflow.js";
+import ReceiptPreviewModal from "../components/sales/ReceiptPreviewModal.jsx";
 
 function SalesPage() {
     const inputRef = useRef(null);
@@ -74,6 +75,9 @@ function SalesPage() {
 
     const payment = usePaymentSummary(total);
 
+    const [receipt, setReceipt] = useState(null);
+    const [showReceipt, setShowReceipt] = useState(false);
+
     const { completing, handleCompleteSale, handleCompleteAndPrint } =
         useCompleteSaleWorkflow({
             invoice,
@@ -85,7 +89,33 @@ function SalesPage() {
             emptyCustomer: EMPTY_CUSTOMER,
             createDraftInvoice,
             inputRef,
+            setReceipt,
+            setShowReceipt,
         });
+
+    const handleReceiptClose = async () => {
+        setShowReceipt(false);
+
+        clearProducts();
+        payment.resetPayment();
+        setCustomer(EMPTY_CUSTOMER);
+
+        await createDraftInvoice();
+
+        inputRef.current?.focus();
+    };
+
+    useEffect(() => {
+        console.log("showReceipt:", showReceipt);
+    }, [showReceipt]);
+
+    useEffect(() => {
+        console.log("receipt:", receipt);
+    }, [receipt]);
+
+    const handlePrint = () => {
+        window.print();
+    };
 
     useEffect(() => {
         if (!loading && inputRef.current) {
@@ -168,6 +198,12 @@ function SalesPage() {
                 onClose={closeResumeModal}
                 bills={heldBills}
                 onResume={handleResumeBill}
+            />
+            <ReceiptPreviewModal
+                open={showReceipt}
+                receipt={receipt}
+                onClose={handleReceiptClose}
+                onPrint={handlePrint}
             />
         </DashboardContainer>
     );

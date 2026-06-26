@@ -66,6 +66,12 @@ function InvoiceSummary({
                         min="0"
                         value={discount}
                         onChange={(e) => setDiscount(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                                e.preventDefault();
+                            }
+                        }}
+                        onWheel={(e) => e.currentTarget.blur()}
                         className="
                         no-spinner
             w-16
@@ -97,6 +103,12 @@ function InvoiceSummary({
                         min="0"
                         value={pointsUsed}
                         onChange={(e) => setPointsUsed(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                                e.preventDefault();
+                            }
+                        }}
+                        onWheel={(e) => e.currentTarget.blur()}
                         className="
             no-spinner
             w-16

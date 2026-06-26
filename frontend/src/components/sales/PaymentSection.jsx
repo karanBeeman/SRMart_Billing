@@ -40,7 +40,12 @@ function PaymentSection({
                         min="0"
                         value={payment.cash}
                         onChange={(e) => payment.setCash(e.target.value)}
-                        onWheel={(e) => e.target.blur()}
+                        onKeyDown={(e) => {
+                            if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                                e.preventDefault();
+                            }
+                        }}
+                        onWheel={(e) => e.currentTarget.blur()}
                         placeholder="Cash Amount"
                         className="
                             no-spinner
@@ -68,7 +73,12 @@ function PaymentSection({
                         min="0"
                         value={payment.upi}
                         onChange={(e) => payment.setUpi(e.target.value)}
-                        onWheel={(e) => e.target.blur()}
+                        onKeyDown={(e) => {
+                            if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                                e.preventDefault();
+                            }
+                        }}
+                        onWheel={(e) => e.currentTarget.blur()}
                         placeholder="UPI Amount"
                         className="
                             no-spinner
@@ -95,8 +105,12 @@ function PaymentSection({
                         type="number"
                         min="0"
                         value={payment.card}
-                        onChange={(e) => payment.setCard(e.target.value)}
-                        onWheel={(e) => e.target.blur()}
+                        onKeyDown={(e) => {
+                            if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                                e.preventDefault();
+                            }
+                        }}
+                        onWheel={(e) => e.currentTarget.blur()}
                         placeholder="Card Amount"
                         className="
                             no-spinner

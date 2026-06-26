@@ -1,6 +1,16 @@
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+const preventNumberInputChange = (e) => {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        e.preventDefault();
+    }
+};
+
+const preventWheelChange = (e) => {
+    e.currentTarget.blur();
+};
+
 function ProductRow({
     product,
     index,
@@ -84,7 +94,9 @@ function ProductRow({
                     min="1"
                     value={qtyValue}
                     onChange={(e) => setQtyValue(e.target.value)}
-                    onBlur={(e) => {
+                    onKeyDown={preventNumberInputChange}
+                    onWheel={preventWheelChange}
+                    onBlur={() => {
                         const qty = Number(qtyValue);
 
                         if (qty !== product.qty) {
@@ -113,7 +125,9 @@ function ProductRow({
                     type="number"
                     value={priceValue}
                     onChange={(e) => setPriceValue(e.target.value)}
-                    onBlur={(e) => {
+                    onKeyDown={preventNumberInputChange}
+                    onWheel={preventWheelChange}
+                    onBlur={() => {
                         const price = Number(priceValue);
 
                         if (price !== product.sellingPrice) {

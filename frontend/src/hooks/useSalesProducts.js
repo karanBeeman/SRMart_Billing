@@ -1,292 +1,68 @@
-import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import productService from "../services/productService";
-import invoiceItemService from "../services/invoiceItemService.js";
+
+import useInvoiceItems from "./useInvoiceItems";
+import useProductSearch from "./useProductSearch";
 
 export default function useSalesProducts(inputRef, invoiceNumber) {
-    useEffect(() => {
-        if (!invoiceNumber) {
-            return;
-        }
+    const search = useProductSearch();
 
-        loadInvoiceItems();
-    }, [invoiceNumber]);
-
-    const clearProducts = () => {
-        setProducts([]);
-    };
-
-    const [searchValue, setSearchValue] = useState("");
-    const [products, setProducts] = useState([]);
-    const [suggestions, setSuggestions] = useState([]);
-    const searchTimerRef = useRef(null);
-    const [activeIndex, setActiveIndex] = useState(-1);
-    const clearSuggestions = () => {
-        setSuggestions([]);
-        setActiveIndex(-1);
-    };
-
-    const handleProductSearch = (value) => {
-        setSearchValue(value);
-
-        const trimmedValue = value.trim();
-
-        if (!trimmedValue) {
-            setSuggestions([]);
-            setActiveIndex(-1);
-
-            return;
-        }
-
-        if (/^\d+$/.test(trimmedValue)) {
-            setSuggestions([]);
-            setActiveIndex(-1);
-
-            return;
-        }
-
-        if (trimmedValue.length < 3) {
-            setSuggestions([]);
-            setActiveIndex(-1);
-
-            return;
-        }
-
-        if (searchTimerRef.current) {
-            clearTimeout(searchTimerRef.current);
-        }
-
-        searchTimerRef.current = setTimeout(async () => {
-            try {
-                const products = await productService.search(trimmedValue);
-
-                const result = Array.isArray(products) ? products : [];
-
-                setSuggestions(result);
-
-                setActiveIndex(result.length > 0 ? 0 : -1);
-            } catch (error) {
-                console.error(error);
-
-                setSuggestions([]);
-                setActiveIndex(-1);
-            }
-        }, 300);
-    };
-
-    const loadInvoiceItems = async () => {
-        try {
-            const items = await invoiceItemService.getItems(invoiceNumber);
-
-            setProducts(
-                items.map((item) => ({
-                    id: item.productId,
-
-                    invoiceItemId: item.id,
-
-                    productName: item.productName,
-
-                    qty: item.qty,
-
-                    mrpPrice: item.mrpPrice,
-
-                    sellingPrice: item.sellingPrice,
-
-                    cgstPercentage: item.cgstPercentage,
-
-                    sgstPercentage: item.sgstPercentage,
-
-                    stockQuantity: item.stockQuantity,
-
-                    total: item.lineTotal,
-                }))
-            );
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const addProductToState = (product, savedItem) => {
-        setProducts((previous) => {
-            const existing = previous.find((item) => item.id === product.id);
-
-            if (existing) {
-                return previous.map((item) =>
-                    item.id === product.id
-                        ? {
-                              ...item,
-                              qty: savedItem.qty,
-                              total: savedItem.lineTotal,
-                          }
-                        : item
-                );
-            }
-
-            return [
-                ...previous,
-                {
-                    id: product.id,
-
-                    invoiceItemId: savedItem.id,
-
-                    productName: product.productName,
-
-                    qty: savedItem.qty,
-
-                    mrpPrice: product.mrpPrice,
-
-                    sellingPrice: product.sellingPrice,
-
-                    cgstPercentage: product.cgstPercentage,
-
-                    sgstPercentage: product.sgstPercentage,
-
-                    stockQuantity: product.stockQuantity,
-
-                    total: savedItem.lineTotal,
-                },
-            ];
-        });
-    };
+    const items = useInvoiceItems(invoiceNumber, inputRef);
 
     const handleProductLookup = async () => {
-        if (!searchValue.trim()) {
+        if (!search.searchValue.trim()) {
             return;
         }
 
         try {
-            const product = await productService.lookup(searchValue);
+            await items.addProduct(search.searchValue);
 
-            const savedItem = await invoiceItemService.addItem(
-                invoiceNumber,
-                product.id
-            );
-            addProductToState(product, savedItem);
+            search.setSearchValue("");
 
-            setSearchValue("");
-            clearSuggestions();
-
-            inputRef.current?.focus();
+            search.clearSuggestions();
         } catch (error) {
-            toast.error(error?.response?.data?.message || "Product not found");
+            toast.error(error.response?.data?.message ?? "Product not found");
         }
     };
 
-    const updateSellingPrice = async (productId, newPrice) => {
-        const product = products.find((p) => p.id === productId);
-
-        if (!product) {
-            return;
-        }
-
+    const selectSuggestedProduct = async (product, callback) => {
         try {
-            const updated = await invoiceItemService.updateSellingPrice(
-                product.invoiceItemId,
-                newPrice
-            );
+            await items.addProduct(product.id);
 
-            setProducts((previous) =>
-                previous.map((item) =>
-                    item.id === productId
-                        ? {
-                              ...item,
-                              sellingPrice: updated.sellingPrice,
-                              total: updated.lineTotal,
-                          }
-                        : item
-                )
-            );
-        } catch (error) {
-            console.error(error);
-        }
-    };
+            search.setSearchValue("");
 
-    const updateQty = async (productId, qty) => {
-        const product = products.find((p) => p.id === productId);
+            search.clearSuggestions();
 
-        if (!product) {
-            return;
-        }
-
-        try {
-            const updated = await invoiceItemService.updateQtyItem(
-                product.invoiceItemId,
-                qty
-            );
-
-            console.log("updated", updated);
-
-            setProducts((previous) =>
-                previous.map((item) =>
-                    item.id === productId
-                        ? {
-                              ...item,
-                              qty: updated.qty,
-                              total: updated.lineTotal,
-                          }
-                        : item
-                )
-            );
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const removeProduct = async (productId) => {
-        const product = products.find((p) => p.id === productId);
-
-        if (!product) {
-            return;
-        }
-
-        try {
-            await invoiceItemService.deleteItem(product.invoiceItemId);
-
-            setProducts((previous) =>
-                previous.filter((item) => item.id !== productId)
-            );
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const selectSuggestedProduct = async (product, onProductAdded) => {
-        try {
-            const fullProduct = await productService.lookup(product.id);
-
-            const savedItem = await invoiceItemService.addItem(
-                invoiceNumber,
-                fullProduct.id
-            );
-
-            addProductToState(fullProduct, savedItem);
-
-            setSearchValue("");
-            clearSuggestions();
-
-            onProductAdded?.(fullProduct.id);
-
-            inputRef.current?.focus();
-        } catch (error) {
-            console.error(error);
+            callback?.(product.id);
+        } catch (e) {
+            console.error(e);
         }
     };
 
     return {
-        searchValue,
-        products,
-        suggestions,
-        activeIndex,
-        setActiveIndex,
+        searchValue: search.searchValue,
 
-        handleProductSearch,
+        products: items.products,
+
+        suggestions: search.suggestions,
+
+        activeIndex: search.activeIndex,
+
+        setActiveIndex: search.setActiveIndex,
+
+        handleProductSearch: search.handleSearch,
+
         handleProductLookup,
+
         selectSuggestedProduct,
 
-        updateQty,
-        updateSellingPrice,
-        removeProduct,
-        clearSuggestions,
-        clearProducts,
+        updateQty: items.updateQty,
+
+        updateSellingPrice: items.updateSellingPrice,
+
+        removeProduct: items.removeProduct,
+
+        clearSuggestions: search.clearSuggestions,
+
+        clearProducts: items.clearProducts,
     };
 }

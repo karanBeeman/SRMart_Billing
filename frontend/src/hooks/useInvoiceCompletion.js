@@ -16,7 +16,10 @@ export default function useInvoiceCompletion() {
 
             toast.success("Sale completed successfully");
 
-            return response.data;
+            console.log("Axios response:", response);
+            console.log("Response data:", response.data);
+
+            return response;
         } catch (error) {
             toast.error("Failed to complete sale");
             throw error;
