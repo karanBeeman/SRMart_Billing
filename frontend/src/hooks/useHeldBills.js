@@ -1,6 +1,8 @@
-import { toast } from "react-toastify";
-import useInvoiceActions from "./useInvoiceActions.js";
 import { useState } from "react";
+import { toast } from "react-toastify";
+
+import invoiceService from "../services/invoiceService";
+import useInvoiceActions from "./useInvoiceActions";
 
 export default function useHeldBills({
     invoice,
@@ -15,23 +17,7 @@ export default function useHeldBills({
     const { holdBill } = useInvoiceActions();
 
     const [showResumeModal, setShowResumeModal] = useState(false);
-
-    const [heldBills] = useState([
-        {
-            invoiceNumber: "INV000012",
-            totalAmount: 450,
-            itemCount: 7,
-            previewItems: ["Bread", "Milk", "Rice"],
-            heldAt: "10:22 PM",
-        },
-        {
-            invoiceNumber: "INV000013",
-            totalAmount: 180,
-            itemCount: 3,
-            previewItems: ["Coke", "Chips", "Biscuits"],
-            heldAt: "10:30 PM",
-        },
-    ]);
+    const [heldBills, setHeldBills] = useState([]);
 
     const handleHoldBill = async () => {
         if (products.length === 0) {
@@ -40,36 +26,63 @@ export default function useHeldBills({
             );
             return;
         }
-        try {
-            if (!invoice?.invoiceNumber) {
-                return;
-            }
 
+        if (!invoice?.invoiceNumber) {
+            return;
+        }
+
+        try {
             await holdBill(invoice.invoiceNumber, user);
+
             toast.success("Bill put on hold successfully");
 
             clearProducts();
-
             setCustomer(emptyCustomer);
 
             await createDraftInvoice();
 
             inputRef.current?.focus();
         } catch (error) {
-            toast.error("Failed to put bill on hold", error);
+            console.error(error);
+            toast.error("Failed to put bill on hold");
         }
     };
 
-    const handleResumeBill = (bill) => {
-        console.log("Resume Bill", bill);
+    const openResumeModal = async () => {
+        try {
+            const bills = await invoiceService.getHeldInvoices(user.username);
 
+            setHeldBills(bills);
+            setShowResumeModal(true);
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to load held bills");
+        }
+    };
+
+    const closeResumeModal = () => {
         setShowResumeModal(false);
+    };
+
+    const handleResumeBill = async (bill) => {
+        try {
+            // await invoiceService.resumeInvoice(bill.invoiceNumber);
+
+            setShowResumeModal(false);
+
+            // TODO:
+            // load invoice items
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to resume bill");
+        }
     };
 
     return {
         heldBills,
         showResumeModal,
-        setShowResumeModal,
+        openResumeModal,
+        closeResumeModal,
         handleHoldBill,
         handleResumeBill,
     };

@@ -57,7 +57,8 @@ function SalesPage() {
     const {
         heldBills,
         showResumeModal,
-        setShowResumeModal,
+        openResumeModal,
+        closeResumeModal,
         handleHoldBill,
         handleResumeBill,
     } = useHeldBills({
@@ -70,10 +71,6 @@ function SalesPage() {
         setCustomer,
         emptyCustomer: EMPTY_CUSTOMER,
     });
-
-    const openResumeModal = () => setShowResumeModal(true);
-
-    const closeResumeModal = () => setShowResumeModal(false);
 
     const payment = usePaymentSummary(total);
 

@@ -21,6 +21,11 @@ const invoiceService = {
 
         return response.data;
     },
+
+    async getHeldInvoices() {
+        const response = await invoiceApi.getHeldInvoices();
+        return response.data;
+    },
 };
 
 export default invoiceService;

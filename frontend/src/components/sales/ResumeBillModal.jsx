@@ -1,3 +1,5 @@
+import { formatHeldTime } from "../../utils/dateUtils.js";
+
 export default function ResumeBillModal({ open, onClose, bills, onResume }) {
     if (!open) {
         return null;
@@ -40,8 +42,11 @@ export default function ResumeBillModal({ open, onClose, bills, onResume }) {
                                     </div>
 
                                     <div className="text-xs text-gray-500 mt-2">
-                                        {bill.itemCount} Items • Held at{" "}
-                                        {bill.heldAt}
+                                        {bill.itemCount}{" "}
+                                        {bill.itemCount === 1
+                                            ? "Item"
+                                            : "Items"}{" "}
+                                        • {formatHeldTime(bill.heldAt)}
                                     </div>
                                 </div>
 
