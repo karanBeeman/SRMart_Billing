@@ -16,6 +16,9 @@ const invoiceApi = {
     getHeldInvoices() {
         return apiClient.get(`/resume/invoices`);
     },
+    resumeInvoice(invoiceNumber) {
+        return apiClient.get(`/resume/invoices/${invoiceNumber}`);
+    },
 };
 
 export default invoiceApi;

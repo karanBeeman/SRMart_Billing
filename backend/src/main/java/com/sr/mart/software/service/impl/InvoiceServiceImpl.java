@@ -4,6 +4,7 @@ import com.sr.mart.software.dto.CompleteInvoiceRequest;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
+import com.sr.mart.software.model.ResumeInvoiceBillResponse;
 import com.sr.mart.software.entity.Invoice;
 import com.sr.mart.software.entity.InvoiceItem;
 import com.sr.mart.software.entity.Product;
@@ -13,6 +14,7 @@ import com.sr.mart.software.exception.InvalidInvoiceException;
 import com.sr.mart.software.exception.InvoiceAlreadyExistsException;
 import com.sr.mart.software.exception.InvoiceNotFoundException;
 import com.sr.mart.software.exception.ProductNotFoundException;
+import com.sr.mart.software.model.InvoiceItemResponse;
 import com.sr.mart.software.model.InvoiceResponse;
 import com.sr.mart.software.model.ResumeInvoiceResponse;
 import com.sr.mart.software.repository.InvoiceItemRepository;
@@ -324,5 +326,40 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         return null;
+    }
+
+    @Transactional
+    public ResumeInvoiceBillResponse resumeInvoiceByNumber(String invoiceNumber) {
+
+        Invoice invoice = invoiceRepository.findByInvoiceNumber(invoiceNumber)
+            .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found"));
+
+        invoice.setStatus(InvoiceStatus.DRAFT);
+
+        invoiceRepository.save(invoice);
+
+        List<InvoiceItem> invoiceItems = invoiceItemRepository.findByInvoice(invoice);
+
+        List<Long> productIds = invoiceItems.stream()
+            .map(InvoiceItem::getProductId)
+            .toList();
+
+        Map<Long, Double> stockMap = productRepository.findByIdIn(productIds)
+            .stream()
+            .collect(Collectors.toMap(
+                Product::getId,
+                Product::getStockQuantity
+            ));
+
+
+        return new ResumeInvoiceBillResponse(
+            InvoiceResponse.from(invoice),
+            invoiceItems.stream()
+                .map(item -> InvoiceItemResponse.from(
+                    item,
+                    stockMap.getOrDefault(item.getProductId(), 0.0)
+                ))
+                .toList()
+        );
     }
 }

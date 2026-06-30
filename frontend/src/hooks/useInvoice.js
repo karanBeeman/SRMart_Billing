@@ -20,10 +20,8 @@ export default function useInvoice(user) {
     };
 
     useEffect(() => {
-        const loadInvoice = async () => {
-            if (!user) {
-                return;
-            }
+        const initialize = async () => {
+            if (!user) return;
 
             try {
                 await createDraftInvoice();
@@ -32,7 +30,7 @@ export default function useInvoice(user) {
             }
         };
 
-        loadInvoice();
+        initialize();
     }, [user]);
 
     return {

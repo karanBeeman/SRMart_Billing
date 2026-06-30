@@ -66,12 +66,15 @@ export default function useHeldBills({
 
     const handleResumeBill = async (bill) => {
         try {
-            // await invoiceService.resumeInvoice(bill.invoiceNumber);
+            const response = await invoiceService.resumeInvoice(
+                bill.invoiceNumber
+            );
+
+            console.log("Resume response:", response);
 
             setShowResumeModal(false);
 
-            // TODO:
-            // load invoice items
+            return response;
         } catch (error) {
             console.error(error);
             toast.error("Failed to resume bill");

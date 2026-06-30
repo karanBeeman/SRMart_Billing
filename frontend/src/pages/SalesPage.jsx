@@ -27,7 +27,8 @@ function SalesPage() {
 
     const { user } = useAuth();
 
-    const { invoice, loading, createDraftInvoice } = useInvoice(user);
+    const { invoice, loading, createDraftInvoice, setInvoice } =
+        useInvoice(user);
 
     const {
         searchValue,
@@ -46,6 +47,8 @@ function SalesPage() {
         removeProduct,
         clearSuggestions,
         clearProducts,
+        loadItems,
+        replaceProducts,
     } = useSalesProducts(inputRef, invoice?.invoiceNumber);
 
     const { selectedRow, setSelectedRow, qtyRefs, priceRefs } =
@@ -101,6 +104,28 @@ function SalesPage() {
         setCustomer(EMPTY_CUSTOMER);
 
         await createDraftInvoice();
+
+        inputRef.current?.focus();
+    };
+
+    const onResumeBill = async (bill) => {
+        if (products.length > 0) {
+            await handleHoldBill();
+        }
+
+        const response = await handleResumeBill(bill);
+
+        if (!response) {
+            return;
+        }
+
+        console.log("On resume response:", response);
+
+        setInvoice(response.invoice);
+
+        replaceProducts(response.items);
+
+        payment.resetPayment();
 
         inputRef.current?.focus();
     };
@@ -197,7 +222,7 @@ function SalesPage() {
                 open={showResumeModal}
                 onClose={closeResumeModal}
                 bills={heldBills}
-                onResume={handleResumeBill}
+                onResume={onResumeBill}
             />
             <ReceiptPreviewModal
                 open={showReceipt}

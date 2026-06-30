@@ -64,5 +64,9 @@ export default function useSalesProducts(inputRef, invoiceNumber) {
         clearSuggestions: search.clearSuggestions,
 
         clearProducts: items.clearProducts,
+
+        loadItems: items.loadItems,
+
+        replaceProducts: items.replaceProducts,
     };
 }

@@ -4,6 +4,7 @@ import com.sr.mart.software.dto.CompleteInvoiceRequest;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
+import com.sr.mart.software.model.ResumeInvoiceBillResponse;
 import com.sr.mart.software.model.InvoiceResponse;
 import com.sr.mart.software.model.ResumeInvoiceResponse;
 import com.sr.mart.software.service.InvoiceService;
@@ -53,6 +54,14 @@ public class InvoiceController {
     @GetMapping("/resume/invoices")
     public ResponseEntity<List<ResumeInvoiceResponse>> resumeInvoices() {
         List<ResumeInvoiceResponse> res = invoiceService.resumeInvoices();
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @GetMapping("/resume/invoices/{invoiceNumber}")
+    public ResponseEntity<ResumeInvoiceBillResponse> resumeInvoice(
+        @PathVariable String invoiceNumber
+    ) {
+        ResumeInvoiceBillResponse res = invoiceService.resumeInvoiceByNumber(invoiceNumber);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 

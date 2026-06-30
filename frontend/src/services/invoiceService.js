@@ -26,6 +26,11 @@ const invoiceService = {
         const response = await invoiceApi.getHeldInvoices();
         return response.data;
     },
+
+    async resumeInvoice(invoiceNumber) {
+        const response = await invoiceApi.resumeInvoice(invoiceNumber);
+        return response.data;
+    },
 };
 
 export default invoiceService;

@@ -9,20 +9,18 @@ import { mapInvoiceItem } from "../mappers/invoiceItemMapper";
 export default function useInvoiceItems(invoiceNumber, inputRef) {
     const [products, setProducts] = useState([]);
 
-    useEffect(() => {
-        if (invoiceNumber) {
-            loadItems();
-        }
-    }, [invoiceNumber]);
-
-    const loadItems = async () => {
+    const loadItems = async (invoiceNo = invoiceNumber) => {
         try {
-            const items = await invoiceItemService.getItems(invoiceNumber);
+            const items = await invoiceItemService.getItems(invoiceNo);
 
             setProducts(items.map(mapInvoiceItem));
         } catch (e) {
             console.error(e);
         }
+    };
+
+    const replaceProducts = (items) => {
+        setProducts(items);
     };
 
     const clearProducts = () => setProducts([]);
@@ -104,5 +102,8 @@ export default function useInvoiceItems(invoiceNumber, inputRef) {
         removeProduct,
 
         clearProducts,
+
+        loadItems,
+        replaceProducts,
     };
 }
