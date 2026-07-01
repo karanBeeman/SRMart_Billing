@@ -10,6 +10,7 @@ import SalesPage from "./pages/SalesPage";
 import DashboardPage from "./pages/DashboardPage";
 
 import ProtectedRoute from "./auth/components/ProtectedRoute";
+import InvoicesPage from "./pages/InvoicesPage.jsx";
 
 function App() {
     return (
@@ -34,6 +35,14 @@ function App() {
                     element={
                         <ProtectedRoute roles={["ADMIN", "MANAGER"]}>
                             <DashboardPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/invoices"
+                    element={
+                        <ProtectedRoute roles={["ADMIN", "MANAGER"]}>
+                            <InvoicesPage />
                         </ProtectedRoute>
                     }
                 />

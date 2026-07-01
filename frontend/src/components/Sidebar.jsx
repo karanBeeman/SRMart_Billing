@@ -77,6 +77,12 @@ function Sidebar() {
                 />
 
                 <SidebarItem
+                    icon={<Receipt size={20} />}
+                    label="Invoices"
+                    to="/invoices"
+                />
+
+                <SidebarItem
                     icon={<BarChart3 size={20} />}
                     label="Reports"
                     to="/reports"
