@@ -1,11 +1,14 @@
 package com.sr.mart.software.controller;
 
 import com.sr.mart.software.model.InvoiceManagementSearchResponse;
+import com.sr.mart.software.model.ResumeInvoiceBillResponse;
 import com.sr.mart.software.service.InvoiceManagementService;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +38,15 @@ public class InvoiceManagementController {
         @RequestParam LocalDate to
     ) {
         return invoiceManagementService.searchByDateRange(from, to);
+    }
+
+    @GetMapping("/{invoiceNumber}/receipt")
+    public ResponseEntity<ResumeInvoiceBillResponse> getReceipt(
+        @PathVariable String invoiceNumber
+    ) {
+        return ResponseEntity.ok(
+            invoiceManagementService.getReceipt(invoiceNumber)
+        );
     }
 
 }

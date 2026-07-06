@@ -90,6 +90,14 @@ export default function useInvoiceItems(invoiceNumber, inputRef) {
         });
     };
 
+    useEffect(() => {
+        if (!invoiceNumber) {
+            return;
+        }
+
+        void loadItems(invoiceNumber);
+    }, [invoiceNumber]);
+
     return {
         products,
 
@@ -103,7 +111,6 @@ export default function useInvoiceItems(invoiceNumber, inputRef) {
 
         clearProducts,
 
-        loadItems,
         replaceProducts,
     };
 }

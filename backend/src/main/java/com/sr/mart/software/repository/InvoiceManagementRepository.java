@@ -11,7 +11,7 @@ public interface InvoiceManagementRepository extends JpaRepository<Invoice, Long
 
     Optional<Invoice> findByInvoiceNumber(String invoiceNumber);
 
-    List<Invoice> findByStatusAndCreatedAtBetweenOrderByUpdatedAtDesc(
+    List<Invoice> findByStatusAndUpdatedAtBetweenOrderByUpdatedAtDesc(
         InvoiceStatus status, LocalDateTime createdAt, LocalDateTime createdAt2
     );
 }

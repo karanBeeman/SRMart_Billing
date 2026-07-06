@@ -44,6 +44,9 @@ public class Invoice extends BaseEntity {
 
     private BigDecimal loyaltyPointsUsed;
 
+    @Column(name = "loyalty_points_earned")
+    private BigDecimal loyaltyPointsEarned;
+
     private BigDecimal paidAmount;
 
     private BigDecimal balanceAmount;

@@ -27,8 +27,17 @@ const searchByDateRange = async (from, to) => {
     return response.data;
 };
 
+const getReceipt = async (invoiceNumber) => {
+    const response = await apiClient.get(
+        `/invoice-management/${invoiceNumber}/receipt`
+    );
+
+    return response.data;
+};
+
 export default {
     getTodayInvoices,
     searchInvoice,
     searchByDateRange,
+    getReceipt,
 };

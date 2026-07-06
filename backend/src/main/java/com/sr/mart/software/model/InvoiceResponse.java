@@ -16,6 +16,7 @@ public record InvoiceResponse(
         String updatedAt,
         BigDecimal discountAmount,
         BigDecimal loyaltyPointsUsed,
+        BigDecimal loyaltyPointsEarned,
         BigDecimal paidAmount,
         BigDecimal balanceAmount,
         BigDecimal changeReturn
@@ -33,6 +34,7 @@ public record InvoiceResponse(
                 createdInvoice.getUpdatedAt().toString(),
                 createdInvoice.getDiscountAmount(),
                 createdInvoice.getLoyaltyPointsUsed(),
+                createdInvoice.getLoyaltyPointsEarned(),
                 createdInvoice.getPaidAmount(),
                 createdInvoice.getBalanceAmount(),
                 createdInvoice.getChangeReturn()

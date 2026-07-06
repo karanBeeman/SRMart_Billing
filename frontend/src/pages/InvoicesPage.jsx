@@ -1,4 +1,9 @@
-import { Search, CalendarDays, Eye, Printer, Receipt } from "lucide-react";
+import { useState } from "react";
+import { Search, CalendarDays, Eye, Printer } from "lucide-react";
+
+import ReceiptPreviewModal from "../components/sales/ReceiptPreviewModal";
+import invoiceManagementService from "../services/invoiceManagementService";
+import { toast } from "react-toastify";
 
 import DashboardContainer from "../components/DashboardContainer";
 import useInvoiceManagement from "../hooks/useInvoiceManagement";
@@ -20,6 +25,27 @@ function InvoicesPage() {
 
         handleSearch,
     } = useInvoiceManagement();
+
+    const [showReceipt, setShowReceipt] = useState(false);
+    const [receipt, setReceipt] = useState(null);
+
+    const handleClosePreview = () => {
+        setShowReceipt(false);
+    };
+
+    const handleViewReceipt = async (invoiceNumber) => {
+        try {
+            const response =
+                await invoiceManagementService.getReceipt(invoiceNumber);
+
+            setReceipt(response);
+
+            setShowReceipt(true);
+        } catch (error) {
+            console.error(error);
+            toast.error("Unable to load receipt");
+        }
+    };
 
     if (loading) {
         return (
@@ -281,27 +307,37 @@ function InvoicesPage() {
                                         <td className="py-4">
                                             <div className="flex justify-center gap-3">
                                                 <button
+                                                    onClick={() =>
+                                                        handleViewReceipt(
+                                                            invoice.invoiceNumber
+                                                        )
+                                                    }
                                                     className="
-                                                    p-2
-                                                    rounded-xl
-                                                    bg-cyan-500/10
-                                                    hover:bg-cyan-500/20
-                                                    text-cyan-400
-                                                    transition
-                                                "
+        p-2
+        rounded-xl
+        bg-cyan-500/10
+        hover:bg-cyan-500/20
+        text-cyan-400
+        transition
+    "
                                                 >
                                                     <Eye size={18} />
                                                 </button>
 
                                                 <button
+                                                    onClick={() =>
+                                                        handleViewReceipt(
+                                                            invoice.invoiceNumber
+                                                        )
+                                                    }
                                                     className="
-                                                    p-2
-                                                    rounded-xl
-                                                    bg-green-500/10
-                                                    hover:bg-green-500/20
-                                                    text-green-400
-                                                    transition
-                                                "
+        p-2
+        rounded-xl
+        bg-green-500/10
+        hover:bg-green-500/20
+        text-green-400
+        transition
+    "
                                                 >
                                                     <Printer size={18} />
                                                 </button>
@@ -314,6 +350,11 @@ function InvoicesPage() {
                     </table>
                 </div>
             </div>
+            <ReceiptPreviewModal
+                open={showReceipt}
+                receipt={receipt}
+                onClose={handleClosePreview}
+            />
         </DashboardContainer>
     );
 }

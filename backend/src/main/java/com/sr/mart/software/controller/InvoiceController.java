@@ -4,6 +4,7 @@ import com.sr.mart.software.dto.CompleteInvoiceRequest;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
+import com.sr.mart.software.model.CompleteInvoiceResponse;
 import com.sr.mart.software.model.ResumeInvoiceBillResponse;
 import com.sr.mart.software.model.InvoiceResponse;
 import com.sr.mart.software.model.ResumeInvoiceResponse;
@@ -66,7 +67,7 @@ public class InvoiceController {
     }
 
     @PutMapping("/complete/invoices/{invoiceNumber}")
-    public ResponseEntity<InvoiceResponse> completeInvoice(
+    public ResponseEntity<CompleteInvoiceResponse> completeInvoice(
         @PathVariable String invoiceNumber,
         @RequestBody CompleteInvoiceRequest request
     ) {

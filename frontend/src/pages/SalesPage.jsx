@@ -47,7 +47,6 @@ function SalesPage() {
         removeProduct,
         clearSuggestions,
         clearProducts,
-        loadItems,
         replaceProducts,
     } = useSalesProducts(inputRef, invoice?.invoiceNumber);
 
@@ -138,10 +137,6 @@ function SalesPage() {
         console.log("receipt:", receipt);
     }, [receipt]);
 
-    const handlePrint = () => {
-        window.print();
-    };
-
     useEffect(() => {
         if (!loading && inputRef.current) {
             inputRef.current.focus();
@@ -228,7 +223,6 @@ function SalesPage() {
                 open={showReceipt}
                 receipt={receipt}
                 onClose={handleReceiptClose}
-                onPrint={handlePrint}
             />
         </DashboardContainer>
     );

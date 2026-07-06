@@ -4,6 +4,7 @@ import com.sr.mart.software.dto.CompleteInvoiceRequest;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
+import com.sr.mart.software.model.CompleteInvoiceResponse;
 import com.sr.mart.software.model.ResumeInvoiceBillResponse;
 import com.sr.mart.software.entity.Invoice;
 import com.sr.mart.software.entity.InvoiceItem;
@@ -11,7 +12,6 @@ import com.sr.mart.software.entity.Product;
 import com.sr.mart.software.enums.InvoiceStatus;
 import com.sr.mart.software.enums.PaymentMode;
 import com.sr.mart.software.exception.InvalidInvoiceException;
-import com.sr.mart.software.exception.InvoiceAlreadyExistsException;
 import com.sr.mart.software.exception.InvoiceNotFoundException;
 import com.sr.mart.software.exception.ProductNotFoundException;
 import com.sr.mart.software.model.InvoiceItemResponse;
@@ -22,13 +22,13 @@ import com.sr.mart.software.repository.InvoiceRepository;
 import com.sr.mart.software.repository.ProductRepository;
 import com.sr.mart.software.service.InvoiceService;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,56 +70,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceResponse createInvoice(CreateInvoiceRequest invoiceRequest) {
 
-        Invoice invoice = buildInvoice(invoiceRequest);
-
-        try {
-            invoice.setInvoiceNumber(generateNextInvoiceNumber());
-            Invoice createdInvoice = invoiceRepository.save(invoice);
-            return InvoiceResponse.from(createdInvoice);
-        } catch (DataIntegrityViolationException e) {
-            throw new InvoiceAlreadyExistsException("Invoice with the same idempotency key already exists", e);
-        }
-    }
-
-    private String generateNextInvoiceNumber() {
-        Long nextSequenceValue = invoiceRepository.getNextInvoiceSequence();
-        return String.format("INV%06d", nextSequenceValue);
-    }
-
-    private Invoice buildInvoice(CreateInvoiceRequest invoiceRequest) {
-        Invoice invoice = new Invoice();
-
-        BigDecimal subtotal = invoiceRequest.subtotal() != null ? invoiceRequest.subtotal() : BigDecimal.ZERO;
-        if (subtotal.signum() < 0) {
-            throw new InvalidInvoiceException("Subtotal cannot be negative");
-        }
-        invoice.setSubtotal(subtotal);
-
-        BigDecimal gstAmount = invoiceRequest.gstAmount() != null ? invoiceRequest.gstAmount() : BigDecimal.ZERO;
-        if (gstAmount.signum() < 0) {
-            throw new InvalidInvoiceException("GST amount cannot be negative");
-        }
-        invoice.setGstAmount(gstAmount);
-
-        BigDecimal totalAmount = invoiceRequest.totalAmount() != null ? invoiceRequest.totalAmount() : subtotal.add(gstAmount);
-        if (totalAmount.signum() < 0) {
-            throw new InvalidInvoiceException("Total amount cannot be negative");
-        }
-        invoice.setTotalAmount(totalAmount);
-
-        String status = (invoiceRequest.status() == null || invoiceRequest.status().isBlank()) ? "CREATED" : invoiceRequest.status();
-        if (!isValidStatus(status)) {
-            throw new InvalidInvoiceException("Invalid status: " + status);
-        }
-        invoice.setStatus(InvoiceStatus.DRAFT);
-        return invoice;
-    }
-
-    private boolean isValidStatus(String status) {
-        return status.equalsIgnoreCase("CREATED")
-                || status.equalsIgnoreCase("BILLED")
-                || status.equalsIgnoreCase("CASHED")
-                || status.equalsIgnoreCase("CANCELLED");
+        return null;
     }
 
     @Override
@@ -158,7 +109,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Transactional
-    public InvoiceResponse completeInvoice(
+    public CompleteInvoiceResponse completeInvoice(
         String invoiceNumber,
         CompleteInvoiceRequest request
     ) {
@@ -192,7 +143,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoiceRepository.save(invoice);
 
-        return InvoiceResponse.from(invoice);
+        return CompleteInvoiceResponse.from(invoice.getInvoiceNumber());
     }
 
     private void updateProductStock(List<InvoiceItem> items) {
@@ -286,6 +237,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setUpiAmount(upi);
         invoice.setCardAmount(card);
 
+        invoice.setLoyaltyPointsEarned(
+            calculateEarnedPoints(payable)
+        );
+
         invoice.setPaidAmount(paidAmount);
         invoice.setBalanceAmount(balance);
         invoice.setChangeReturn(change);
@@ -361,5 +316,15 @@ public class InvoiceServiceImpl implements InvoiceService {
                 ))
                 .toList()
         );
+    }
+
+    private BigDecimal calculateEarnedPoints(BigDecimal totalAmount) {
+
+        if (totalAmount.compareTo(BigDecimal.valueOf(200)) < 0) {
+            return BigDecimal.ZERO;
+        }
+
+       return totalAmount
+            .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
     }
 }

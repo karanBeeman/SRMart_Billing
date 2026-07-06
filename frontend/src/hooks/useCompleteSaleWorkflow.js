@@ -2,7 +2,7 @@
 
 import { toast } from "react-toastify";
 import useInvoiceCompletion from "./useInvoiceCompletion";
-import { printReceipt } from "../utils/receiptPrinter";
+import invoiceManagementService from "../services/invoiceManagementService.js";
 
 export default function useCompleteSaleWorkflow({
     invoice,
@@ -40,15 +40,19 @@ export default function useCompleteSaleWorkflow({
         try {
             const completedInvoice = await completeInvoice();
 
+            console.log("Completed invoice:", completedInvoice);
+
+            const receipt = await invoiceManagementService.getReceipt(
+                completedInvoice.invoiceNumber
+            );
+
             try {
-                setReceipt(completedInvoice);
+                setReceipt(receipt);
                 setShowReceipt(true);
             } catch (error) {
                 toast.warning("Sale completed. Printing failed.");
                 console.error(error);
             }
-
-            //  await cleanup();
         } catch (error) {
             console.error(error);
         }
