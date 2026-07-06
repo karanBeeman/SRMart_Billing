@@ -4,8 +4,6 @@ import com.sr.mart.software.dto.CompleteInvoiceRequest;
 import com.sr.mart.software.dto.CreateInvoiceRequest;
 import com.sr.mart.software.dto.DraftInvoiceRequest;
 import com.sr.mart.software.dto.HoldInvoiceStatusRequest;
-import com.sr.mart.software.model.CompleteInvoiceResponse;
-import com.sr.mart.software.model.ResumeInvoiceBillResponse;
 import com.sr.mart.software.entity.Invoice;
 import com.sr.mart.software.entity.InvoiceItem;
 import com.sr.mart.software.entity.Product;
@@ -14,8 +12,10 @@ import com.sr.mart.software.enums.PaymentMode;
 import com.sr.mart.software.exception.InvalidInvoiceException;
 import com.sr.mart.software.exception.InvoiceNotFoundException;
 import com.sr.mart.software.exception.ProductNotFoundException;
+import com.sr.mart.software.model.CompleteInvoiceResponse;
 import com.sr.mart.software.model.InvoiceItemResponse;
 import com.sr.mart.software.model.InvoiceResponse;
+import com.sr.mart.software.model.ResumeInvoiceBillResponse;
 import com.sr.mart.software.model.ResumeInvoiceResponse;
 import com.sr.mart.software.repository.InvoiceItemRepository;
 import com.sr.mart.software.repository.InvoiceRepository;
@@ -323,8 +323,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (totalAmount.compareTo(BigDecimal.valueOf(200)) < 0) {
             return BigDecimal.ZERO;
         }
-
-       return totalAmount
-            .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+        return totalAmount.divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
     }
 }

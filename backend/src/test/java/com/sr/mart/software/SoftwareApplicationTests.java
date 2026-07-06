@@ -1,6 +1,7 @@
 package com.sr.mart.software;
 
 import com.sr.mart.software.repository.InvoiceItemRepository;
+import com.sr.mart.software.repository.InvoiceManagementRepository;
 import com.sr.mart.software.repository.InvoiceRepository;
 import com.sr.mart.software.repository.ProductRepository;
 import com.sr.mart.software.repository.RoleRepository;
@@ -32,6 +33,9 @@ class SoftwareApplicationTests {
 
     @MockitoBean
     private InvoiceItemRepository invoiceItemRepository;
+
+    @MockitoBean
+    private InvoiceManagementRepository invoiceManagementRepository;
 
     @Test
     void contextLoads() {

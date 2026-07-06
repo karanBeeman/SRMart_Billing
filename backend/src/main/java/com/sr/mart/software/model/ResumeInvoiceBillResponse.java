@@ -10,6 +10,10 @@ public record ResumeInvoiceBillResponse(
     List<InvoiceItemResponse> items
 ) {
 
+    public ResumeInvoiceBillResponse {
+        items = items == null ? List.of() : List.copyOf(items);
+    }
+
     public static ResumeInvoiceBillResponse from(
         Invoice invoice,
         List<InvoiceItem> invoiceItems,
