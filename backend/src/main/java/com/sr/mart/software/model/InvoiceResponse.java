@@ -2,6 +2,7 @@ package com.sr.mart.software.model;
 
 import com.sr.mart.software.entity.Invoice;
 import com.sr.mart.software.enums.InvoiceStatus;
+import com.sr.mart.software.enums.PaymentMode;
 import java.math.BigDecimal;
 
 public record InvoiceResponse(
@@ -19,7 +20,8 @@ public record InvoiceResponse(
         BigDecimal loyaltyPointsEarned,
         BigDecimal paidAmount,
         BigDecimal balanceAmount,
-        BigDecimal changeReturn
+        BigDecimal changeReturn,
+        PaymentMode paymentMode
 ) {
     public static InvoiceResponse from(Invoice createdInvoice) {
         return new InvoiceResponse(
@@ -37,7 +39,8 @@ public record InvoiceResponse(
                 createdInvoice.getLoyaltyPointsEarned(),
                 createdInvoice.getPaidAmount(),
                 createdInvoice.getBalanceAmount(),
-                createdInvoice.getChangeReturn()
+                createdInvoice.getChangeReturn(),
+                createdInvoice.getPaymentMode()
         );
     }
 }
